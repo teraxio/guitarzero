@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GuitarZero to BandRock | De Cero a tu Banda en 30 Días</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Barlow+Condensed:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cyan: #00e5ff;
+      --magenta: #e040fb;
+      --cyan-glow: rgba(0, 229, 255, 0.4);
+      --magenta-glow: rgba(224, 64, 251, 0.4);
+      --dark: #06060e;
+      --dark2: #0d0d1a;
+      --text: #e8e8f0;
+      --muted: #7a7a9a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ---- NOISE TEXTURE OVERLAY ---- */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.6;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(6,6,14,0.95), transparent);
+    }
+
+    .nav-logo {
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.1rem;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--cyan); }
+
+    .lang-toggle {
+      display: flex;
+      gap: 0.3rem;
+      align-items: center;
+    }
+
+    .lang-btn {
+      background: none;
+      border: 1px solid var(--muted);
+      color: var(--muted);
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      transition: all 0.2s;
+      font-family: 'Barlow', sans-serif;
+    }
+
+    .lang-btn.active {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan-glow);
+    }
+
+    /* ---- HERO ---- */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      padding: 6rem 2rem 4rem;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 60%, rgba(224,64,251,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 30% 30%, rgba(0,229,255,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 60% at 70% 70%, rgba(0,229,255,0.05) 0%, transparent 60%);
+    }
+
+    /* Grid lines background */
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    .hero-logo-img {
+      width: min(220px, 40vw);
+      margin-bottom: 1.5rem;
+      filter: drop-shadow(0 0 30px rgba(0,229,255,0.5)) drop-shadow(0 0 60px rgba(224,64,251,0.3));
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .hero-pretitle {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Black Ops One', cursive;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: 0.95;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s 0.15s ease both;
+    }
+
+    .hero-title .line1 {
+      display: block;
+      background: linear-gradient(90deg, var(--cyan), #60efff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 20px var(--cyan-glow));
+    }
+
+    .hero-title .line2 {
+      display: block;
+      background: linear-gradient(90deg, var(--magenta), #ff80ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 20px var(--magenta-glow));
+    }
+
+    .hero-sub {
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      font-weight: 300;
+      color: var(--text);
+      max-width: 600px;
+      line-height: 1.5;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .hero-sub strong {
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.8s 0.45s ease both;
+    }
+
+    .btn-primary {
+      padding: 1rem 2.5rem;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      color: #000;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn-primary:hover::after { opacity: 0.15; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,229,255,0.4), 0 5px 20px rgba(224,64,251,0.3); }
+
+    .btn-secondary {
+      padding: 1rem 2.5rem;
+      background: transparent;
+      color: var(--cyan);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--cyan);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0,229,255,0.08);
+      box-shadow: 0 0 20px var(--cyan-glow);
+      transform: translateY(-2px);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      animation: fadeUp 1s 1s ease both;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--cyan), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.1); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- STRIP ---- */
+    .strip {
+      background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--cyan));
+      background-size: 200% 100%;
+      animation: gradientShift 4s linear infinite;
+      padding: 0.8rem 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .strip-inner {
+      display: inline-flex;
+      gap: 3rem;
+      animation: marquee 20s linear infinite;
+    }
+
+    .strip span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #000;
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ---- SECTIONS COMMON ---- */
+    section { padding: 6rem 2rem; }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Black Ops One', cursive;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ---- LEVELS SECTION ---- */
+    #levels {
+      background: var(--dark2);
+      position: relative;
+    }
+
+    #levels::before {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--magenta), transparent);
+    }
+
+    .levels-intro {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 4rem;
+    }
+
+    .levels-intro p {
+      font-size: 1.15rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .levels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .level-card {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 2.5rem;
+      background: rgba(255,255,255,0.02);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .level-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+
+    .level-card.beginner::before { background: linear-gradient(90deg, var(--cyan), transparent); }
+    .level-card.intermediate::before { background: linear-gradient(90deg, var(--magenta), var(--cyan)); }
+    .level-card.semipro::before { background: linear-gradient(90deg, var(--magenta), transparent); }
+
+    .level-card:hover {
+      border-color: rgba(0,229,255,0.2);
+      background: rgba(0,229,255,0.03);
+      transform: translateY(-4px);
+    }
+
+    .level-emoji { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+
+    .level-tag {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      margin-bottom: 1rem;
+    }
+
+    .level-card.beginner .level-tag { background: rgba(0,229,255,0.15); color: var(--cyan); }
+    .level-card.intermediate .level-tag { background: rgba(224,64,251,0.1); color: var(--magenta); }
+    .level-card.semipro .level-tag { background: rgba(224,64,251,0.15); color: var(--magenta); }
+
+    .level-title {
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.6rem;
+      margin-bottom: 0.8rem;
+      line-height: 1.1;
+    }
+
+    .level-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .level-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .level-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .level-bullets li::before {
+      content: '→';
+      color: var(--cyan);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.05em;
+    }
+
+    .level-card.intermediate .level-bullets li::before { color: var(--magenta); }
+    .level-card.semipro .level-bullets li::before { color: var(--magenta); }
+
+    /* ---- COMMUNITIES ---- */
+    #communities { background: var(--dark); }
+
+    .communities-intro {
+      text-align: center;
+      max-width: 650px;
+      margin: 0 auto 4rem;
+    }
+
+    .communities-intro p {
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    .comm-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .comm-item {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      background: rgba(255,255,255,0.015);
+      transition: all 0.3s;
+      cursor: default;
+    }
+
+    .comm-item:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 20px rgba(0,229,255,0.1);
+      transform: translateY(-3px);
+    }
+
+    .comm-icon { font-size: 2rem; display: block; margin-bottom: 0.7rem; }
+
+    .comm-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .comm-phase {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ---- JACKTRIP ---- */
+    #jacktrip {
+      background: var(--dark2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #jacktrip::after {
+      content: '';
+      position: absolute;
+      right: -200px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .jacktrip-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .jacktrip-text .section-title { margin-bottom: 1rem; }
+
+    .jacktrip-text p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .jacktrip-stat {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.2rem 1.5rem;
+      border: 1px solid rgba(0,229,255,0.15);
+      border-radius: 6px;
+      background: rgba(0,229,255,0.03);
+      margin-bottom: 1rem;
+    }
+
+    .stat-num {
+      font-family: 'Black Ops One', cursive;
+      font-size: 2rem;
+      color: var(--cyan);
+      filter: drop-shadow(0 0 10px var(--cyan-glow));
+      white-space: nowrap;
+    }
+
+    .stat-label { color: var(--muted); font-size: 0.85rem; line-height: 1.4; }
+
+    .latency-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .latency-bar-wrap { }
+
+    .latency-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .latency-label span:first-child { color: var(--muted); }
+    .latency-label span:last-child { font-weight: 700; }
+
+    .latency-bar {
+      height: 8px;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .latency-fill {
+      height: 100%;
+      border-radius: 4px;
+      animation: barFill 2s ease both;
+    }
+
+    .bar-bad { background: linear-gradient(90deg, #ff4040, #ff8040); width: 85%; }
+    .bar-ok  { background: linear-gradient(90deg, #ffcc00, #ff8040); width: 55%; }
+    .bar-gz  { background: linear-gradient(90deg, var(--cyan), var(--magenta)); width: 12%; }
+
+    .bar-gz-label { color: var(--cyan); }
+
+    @keyframes barFill {
+      from { width: 0 !important; }
+    }
+
+    /* ---- PRICING ---- */
+    #pricing {
+      background: var(--dark);
+      text-align: center;
+    }
+
+    .pricing-intro {
+      max-width: 600px;
+      margin: 0 auto 4rem;
+    }
+
+    .pricing-intro p { color: var(--muted); font-size: 1.1rem; line-height: 1.7; }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto 3rem;
+    }
+
+    .price-card {
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 8px;
+      padding: 2.5rem 1.5rem;
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .price-card.featured {
+      border-color: var(--cyan);
+      box-shadow: 0 0 40px rgba(0,229,255,0.15);
+      background: rgba(0,229,255,0.03);
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      color: #000;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      padding: 0.25rem 1rem;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .price-tier {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .price-name {
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+
+    .price-amount {
+      margin-bottom: 1.5rem;
+    }
+
+    .price-amount .amount {
+      font-family: 'Black Ops One', cursive;
+      font-size: 2.8rem;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .price-amount .period {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: block;
+      margin-top: -0.3rem;
+    }
+
+    .price-features {
+      list-style: none;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 2rem;
+    }
+
+    .price-features li {
+      font-size: 0.88rem;
+      color: var(--muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .price-features li .check { color: var(--cyan); flex-shrink: 0; }
+
+    .price-cta {
+      display: block;
+      padding: 0.8rem 1.5rem;
+      border-radius: 4px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .price-cta-outline {
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text);
+    }
+
+    .price-cta-outline:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .price-cta-filled {
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      color: #000;
+    }
+
+    .price-cta-filled:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,229,255,0.3);
+    }
+
+    .pricing-note {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .pricing-note strong { color: var(--cyan); }
+
+    /* ---- SPONSORS ---- */
+    #sponsors {
+      background: var(--dark2);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .sponsors-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 3rem;
+    }
+
+    .sponsor-tiers {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto 4rem;
+    }
+
+    .sponsor-card {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: left;
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .sponsor-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .sponsor-card.founding::before { background: linear-gradient(90deg, var(--cyan), var(--magenta)); }
+    .sponsor-card.band::before { background: var(--magenta); }
+    .sponsor-card.track::before { background: var(--cyan); }
+
+    .sponsor-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,229,255,0.2);
+    }
+
+    .sponsor-tier-name {
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.3rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .sponsor-price {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 1.8rem;
+      color: var(--cyan);
+      margin-bottom: 1.2rem;
+    }
+
+    .sponsor-price span { font-size: 1rem; color: var(--muted); font-weight: 400; }
+
+    .sponsor-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .sponsor-bullets li {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      gap: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .sponsor-bullets li::before { content: '◆'; color: var(--magenta); font-size: 0.5rem; margin-top: 0.3em; flex-shrink: 0; }
+
+    /* ---- IMPACT ---- */
+    #impact {
+      background: var(--dark);
+      padding: 5rem 2rem;
+    }
+
+    .impact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .impact-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .impact-stat {
+      padding: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .impact-num {
+      font-family: 'Black Ops One', cursive;
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+    }
+
+    .impact-label { font-size: 0.8rem; color: var(--muted); line-height: 1.3; margin-top: 0.3rem; }
+
+    .impact-text p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ---- CONTACT FORM ---- */
+    #contact {
+      background: var(--dark2);
+      position: relative;
+    }
+
+    #contact::before {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--magenta), var(--cyan), transparent);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .contact-info h2 { margin-bottom: 1rem; }
+
+    .contact-info p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .contact-detail {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 0.8rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .contact-detail .icon { color: var(--cyan); font-size: 1.1rem; }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-field label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0,229,255,0.08);
+    }
+
+    .form-field select option { background: #1a1a2e; }
+
+    .form-field textarea { resize: vertical; min-height: 100px; }
+
+    .form-submit {
+      margin-top: 0.5rem;
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      background: var(--dark);
+      padding: 3rem 2rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .footer-logo {
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.5rem;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-tagline {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--cyan); }
+
+    .footer-copy {
+      color: var(--muted);
+      font-size: 0.75rem;
+      opacity: 0.5;
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+
+      .jacktrip-inner,
+      .impact-inner,
+      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+
+      .form-row { grid-template-columns: 1fr; }
+
+      .impact-stats { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ---- SCROLL REVEAL ---- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">GuitarZero</div>
+  <ul class="nav-links">
+    <li><a href="#levels" data-esp="Tu Nivel" data-eng="Your Level">Tu Nivel</a></li>
+    <li><a href="#communities" data-esp="Comunidades" data-eng="Communities">Comunidades</a></li>
+    <li><a href="#pricing" data-esp="Planes" data-eng="Plans">Planes</a></li>
+    <li><a href="#sponsors" data-esp="Patrocinios" data-eng="Sponsorships">Patrocinios</a></li>
+    <li><a href="#contact" data-esp="Contacto" data-eng="Contact">Contacto</a></li>
+  </ul>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('esp')">ESP</button>
+    <button class="lang-btn" onclick="setLang('eng')">ENG</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 280'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='100%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%2300e5ff'/%3E%3Cstop offset='100%25' stop-color='%23e040fb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M100 10 L115 15 L120 25 L118 80 L130 95 L135 130 L132 165 Q135 195 120 205 Q105 215 100 215 Q95 215 80 205 Q65 195 68 165 L65 130 L70 95 L82 80 L80 25 L85 15 Z' fill='none' stroke='url(%23g)' stroke-width='5' stroke-linejoin='round'/%3E%3Cpath d='M80 25 L85 15 L100 10 L115 15 L120 25' fill='none' stroke='url(%23g)' stroke-width='5'/%3E%3Cellipse cx='100' cy='155' rx='32' ry='38' fill='none' stroke='url(%23g)' stroke-width='3'/%3E%3C/svg%3E" alt="Guitar" class="hero-logo-img">
+
+  <p class="hero-pretitle" data-esp="Academia Musical Online · Tijuana → Global" data-eng="Online Music Academy · Tijuana → Global">Academia Musical Online · Tijuana → Global</p>
+
+  <h1 class="hero-title">
+    <span class="line1" data-esp="GuitarZero" data-eng="GuitarZero">GuitarZero</span>
+    <span class="line2" data-esp="to BandRock" data-eng="to BandRock">to BandRock</span>
+  </h1>
+
+  <p class="hero-sub" data-esp="Sientes esa música dentro de ti.<br>Nosotros te damos la banda para sacarla." data-eng="You feel that music inside you.<br>We give you the band to let it out.">
+    Sientes esa música dentro de ti.<br>Nosotros te damos la banda para sacarla.
+  </p>
+
+  <div class="hero-ctas">
+    <a href="#levels" class="btn-primary" data-esp="Empieza Hoy — Es Gratis" data-eng="Start Today — It's Free">Empieza Hoy — Es Gratis</a>
+    <a href="#contact" class="btn-secondary" data-esp="Soy Patrocinador" data-eng="I'm a Sponsor">Soy Patrocinador</a>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="strip-inner">
+    <span data-esp="🎸 Tu primer riff en 7 días" data-eng="🎸 Your first riff in 7 days">🎸 Tu primer riff en 7 días</span>
+    <span data-esp="🥁 Forma tu banda virtual" data-eng="🥁 Form your virtual band">🥁 Forma tu banda virtual</span>
+    <span data-esp="🎤 Latencia &lt;25ms — Stanford" data-eng="🎤 &lt;25ms Latency — Stanford">🎤 Latencia &lt;25ms — Stanford</span>
+    <span data-esp="🎹 ESP + ENG · LATAM + Global" data-eng="🎹 ESP + ENG · LATAM + Global">🎹 ESP + ENG · LATAM + Global</span>
+    <span data-esp="🎸 Tu primer riff en 7 días" data-eng="🎸 Your first riff in 7 days">🎸 Tu primer riff en 7 días</span>
+    <span data-esp="🥁 Forma tu banda virtual" data-eng="🥁 Form your virtual band">🥁 Forma tu banda virtual</span>
+    <span data-esp="🎤 Latencia &lt;25ms — Stanford" data-eng="🎤 &lt;25ms Latency — Stanford">🎤 Latencia &lt;25ms — Stanford</span>
+    <span data-esp="🎹 ESP + ENG · LATAM + Global" data-eng="🎹 ESP + ENG · LATAM + Global">🎹 ESP + ENG · LATAM + Global</span>
+  </div>
+</div>
+
+<!-- LEVELS -->
+<section id="levels">
+  <div class="container">
+    <div class="levels-intro reveal">
+      <p class="section-label" data-esp="Para Ti" data-eng="For You">Para Ti</p>
+      <h2 class="section-title" data-esp="¿Dónde estás hoy?" data-eng="Where are you today?">¿Dónde estás hoy?</h2>
+      <p data-esp="No importa si nunca has tocado una nota o si ya tienes años en esto. Tenemos el camino exacto para llevarte al siguiente nivel." data-eng="Whether you've never played a note or have years of experience — we have the exact path to take you to the next level.">No importa si nunca has tocado una nota o si ya tienes años en esto. Tenemos el camino exacto para llevarte al siguiente nivel.</p>
+    </div>
+
+    <div class="levels-grid">
+      <!-- BEGINNER -->
+      <div class="level-card beginner reveal">
+        <span class="level-emoji">🎸</span>
+        <span class="level-tag" data-esp="Principiante" data-eng="Beginner">Principiante</span>
+        <h3 class="level-title" data-esp="Tu Primera Canción en 7 Días" data-eng="Your First Song in 7 Days">Tu Primera Canción en 7 Días</h3>
+        <p class="level-desc" data-esp="Sin teoría aburrida. Sin años de práctica solitaria. Resultados reales desde el Día 1." data-eng="No boring theory. No years of solo practice. Real results from Day 1.">Sin teoría aburrida. Sin años de práctica solitaria. Resultados reales desde el Día 1.</p>
+        <ul class="level-bullets">
+          <li data-esp="Tu primer riff icónico en 60 minutos" data-eng="Your first iconic riff in 60 minutes">Tu primer riff icónico en 60 minutos</li>
+          <li data-esp="3 canciones completas en tu primer mes" data-eng="3 complete songs in your first month">3 canciones completas en tu primer mes</li>
+          <li data-esp="Jams virtuales con otros principiantes" data-eng="Virtual jams with other beginners">Jams virtuales con otros principiantes</li>
+          <li data-esp="Guitarra, Bajo, Batería, Voz, Teclado" data-eng="Guitar, Bass, Drums, Voice, Keys">Guitarra, Bajo, Batería, Voz, Teclado</li>
+          <li data-esp="Quick Wins diarios — nunca te rindes" data-eng="Daily Quick Wins — you never quit">Quick Wins diarios — nunca te rindes</li>
+        </ul>
+      </div>
+
+      <!-- INTERMEDIATE -->
+      <div class="level-card intermediate reveal">
+        <span class="level-emoji">⚡</span>
+        <span class="level-tag" data-esp="Intermedio" data-eng="Intermediate">Intermedio</span>
+        <h3 class="level-title" data-esp="Forma tu Banda Virtual Real" data-eng="Form Your Real Virtual Band">Forma tu Banda Virtual Real</h3>
+        <p class="level-desc" data-esp="Ya sabes tocar. Ahora es hora de sonar como una banda profesional, desde donde estés." data-eng="You know how to play. Now it's time to sound like a pro band, from wherever you are.">Ya sabes tocar. Ahora es hora de sonar como una banda profesional, desde donde estés.</p>
+        <ul class="level-bullets">
+          <li data-esp="Bandas virtuales con latencia &lt;25ms (Stanford)" data-eng="Virtual bands with &lt;25ms latency (Stanford)">Bandas virtuales con latencia &lt;25ms (Stanford)</li>
+          <li data-esp="Composición y producción casera de calidad" data-eng="Home composition and quality production">Composición y producción casera de calidad</li>
+          <li data-esp="Jam sessions multi-instrumento semanales" data-eng="Weekly multi-instrument jam sessions">Jam sessions multi-instrumento semanales</li>
+          <li data-esp="Técnicas avanzadas con mentorías grupales" data-eng="Advanced techniques with group mentorship">Técnicas avanzadas con mentorías grupales</li>
+          <li data-esp="Graba tu primer demo profesional" data-eng="Record your first professional demo">Graba tu primer demo profesional</li>
+        </ul>
+      </div>
+
+      <!-- SEMIPRO -->
+      <div class="level-card semipro reveal">
+        <span class="level-emoji">🏆</span>
+        <span class="level-tag" data-esp="Semi-Profesional" data-eng="Semi-Professional">Semi-Profesional</span>
+        <h3 class="level-title" data-esp="Convierte tu Música en Carrera" data-eng="Turn Your Music Into a Career">Convierte tu Música en Carrera</h3>
+        <p class="level-desc" data-esp="La industria ya está esperando tu talento. Te conectamos con managers, productores y cazatalentos reales." data-eng="The industry is already waiting for your talent. We connect you with real managers, producers, and scouts.">La industria ya está esperando tu talento. Te conectamos con managers, productores y cazatalentos reales.</p>
+        <ul class="level-bullets">
+          <li data-esp="Red real: productores, scouts, managers" data-eng="Real network: producers, scouts, managers">Red real: productores, scouts, managers</li>
+          <li data-esp="Protección de propiedad intelectual y contratos" data-eng="Intellectual property protection and contracts">Protección de propiedad intelectual y contratos</li>
+          <li data-esp="Booking, marketing y branding de banda" data-eng="Booking, marketing and band branding">Booking, marketing y branding de banda</li>
+          <li data-esp="Ingresos $500–$2,000+/mes de tu música" data-eng="$500–$2,000+/month earnings from your music">Ingresos $500–$2,000+/mes de tu música</li>
+          <li data-esp="Showcases con cazatalentos en vivo" data-eng="Live showcases with talent scouts">Showcases con cazatalentos en vivo</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITIES -->
+<section id="communities">
+  <div class="container">
+    <div class="communities-intro reveal">
+      <p class="section-label" data-esp="9 Comunidades" data-eng="9 Communities">9 Comunidades</p>
+      <h2 class="section-title" data-esp="Un Ecosistema Completo" data-eng="A Complete Ecosystem">Un Ecosistema Completo</h2>
+      <p data-esp="Desde tu instrumento hasta la industria. Cada comunidad es un mundo especializado que trabaja en conjunto para tu éxito." data-eng="From your instrument to the industry. Each community is a specialized world working together for your success.">Desde tu instrumento hasta la industria. Cada comunidad es un mundo especializado que trabaja en conjunto para tu éxito.</p>
+    </div>
+    <div class="comm-grid reveal">
+      <div class="comm-item">
+        <span class="comm-icon">🎸</span>
+        <span class="comm-name" data-esp="Guitarra" data-eng="Guitar">Guitarra</span>
+        <span class="comm-phase" data-esp="De cero a Rockstar" data-eng="Zero to Rockstar">De cero a Rockstar</span>
+      </div>
+      <div class="comm-item">
+        <span class="comm-icon">🎵</span>
+        <span class="comm-name" data-esp="Bajo" data-eng="Bass">Bajo</span>
+        <span class="comm-phase" data-esp="Groove Master" data-eng="Groove Master">Groove Master</span>
+      </div>
+      <div class="comm-item">
+        <span class="comm-icon">🥁</span>
+        <span class="comm-name" data-esp="Batería" data-eng="Drums">Batería</span>
+        <span class="comm-phase" data-esp="Rhythm Masters" data-eng="Rhythm Masters">Rhythm Masters</span>
+      </div>
+      <div class="comm-item">
+        <span class="comm-icon">🎤</span>
+        <span class="comm-name" data-esp="Voz" data-eng="Voice">Voz</span>
+        <span class="comm-phase" data-esp="Vocal Academy" data-eng="Vocal Academy">Vocal Academy</span>
+      </div>
+      <div class="comm-item">
+        <span class="comm-icon">🎹</span>
+        <span class="comm-name" data-esp="Teclado" data-eng="Keys">Teclado</span>
+        <span class="comm-phase" data-esp="Keys & Synths" data-eng="Keys & Synths">Keys & Synths</span>
+      </div>
+      <div class="comm-item">
+        <span class="comm-icon">📋</span>
+        <span class="comm-name" data-esp="Management" data-eng="Management">Management</span>
+        <span class="comm-phase" data-esp="Band Management Pro" data-eng="Band Management Pro">Band Management Pro</span>
+      </div>
+      <div class="comm-item">
+        <span class="comm-icon">⚖️</span>
+        <span class="comm-name" data-esp="Legal" data-eng="Legal">Legal</span>
+        <span class="comm-phase" data-esp="Music Law Academy" data-eng="Music Law Academy">Music Law Academy</span>
+      </div>
+      <div class="comm-item">
+        <span class="comm-icon">🛡️</span>
+        <span class="comm-name" data-esp="Propiedad Intelectual" data-eng="Intellectual Property">Propiedad Intelectual</span>
+        <span class="comm-phase" data-esp="IP Fortress" data-eng="IP Fortress">IP Fortress</span>
+      </div>
+      <div class="comm-item">
+        <span class="comm-icon">💻</span>
+        <span class="comm-name" data-esp="Tecnología" data-eng="Technology">Tecnología</span>
+        <span class="comm-phase" data-esp="TechBand Lab" data-eng="TechBand Lab">TechBand Lab</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JACKTRIP -->
+<section id="jacktrip">
+  <div class="container">
+    <div class="jacktrip-inner">
+      <div class="jacktrip-text reveal">
+        <p class="section-label" data-esp="Tecnología Stanford" data-eng="Stanford Technology">Tecnología Stanford</p>
+        <h2 class="section-title" data-esp="Tocan Juntos. En Tiempo Real." data-eng="Playing Together. In Real Time.">Tocan Juntos.<br>En Tiempo Real.</h2>
+        <p data-esp="JackTrip permite que tu banda suene como si estuvieran en la misma habitación — desde Tijuana, Ciudad de México, Los Ángeles o Madrid. Sin delays. Sin excusas." data-eng="JackTrip lets your band sound like you're all in the same room — from Tijuana, Mexico City, Los Angeles or Madrid. No delays. No excuses.">JackTrip permite que tu banda suene como si estuvieran en la misma habitación — desde Tijuana, Ciudad de México, Los Ángeles o Madrid. Sin delays. Sin excusas.</p>
+
+        <div class="jacktrip-stat">
+          <div class="stat-num">&lt;25ms</div>
+          <div class="stat-label" data-esp="Latencia ultra-baja.<br>Equivalente a estar en la misma sala." data-eng="Ultra-low latency.<br>Equivalent to being in the same room.">Latencia ultra-baja.<br>Equivalente a estar en la misma sala.</div>
+        </div>
+        <div class="jacktrip-stat">
+          <div class="stat-num">0</div>
+          <div class="stat-label" data-esp="Competidores directos que ofrezcan bandas virtuales + bilingüe + latencia &lt;25ms." data-eng="Direct competitors offering virtual bands + bilingual + &lt;25ms latency.">Competidores directos que ofrezcan esto.</div>
+        </div>
+      </div>
+
+      <div class="latency-visual reveal">
+        <p class="section-label" data-esp="Comparativa de Latencia" data-eng="Latency Comparison">Comparativa de Latencia</p>
+
+        <div class="latency-bar-wrap">
+          <div class="latency-label">
+            <span data-esp="Zoom / Google Meet" data-eng="Zoom / Google Meet">Zoom / Google Meet</span>
+            <span style="color:#ff5050">150–300ms ✗</span>
+          </div>
+          <div class="latency-bar"><div class="latency-fill bar-bad"></div></div>
+        </div>
+
+        <div class="latency-bar-wrap">
+          <div class="latency-label">
+            <span data-esp="JamKazam / otras apps" data-eng="JamKazam / other apps">JamKazam / otras apps</span>
+            <span style="color:#ffcc00">50–100ms ≈</span>
+          </div>
+          <div class="latency-bar"><div class="latency-fill bar-ok"></div></div>
+        </div>
+
+        <div class="latency-bar-wrap">
+          <div class="latency-label">
+            <span style="color:var(--cyan)" data-esp="GuitarZero + JackTrip" data-eng="GuitarZero + JackTrip">GuitarZero + JackTrip</span>
+            <span class="bar-gz-label">&lt;25ms ✓</span>
+          </div>
+          <div class="latency-bar"><div class="latency-fill bar-gz"></div></div>
+        </div>
+
+        <div style="margin-top:2rem; padding:1.5rem; border:1px solid rgba(0,229,255,0.15); border-radius:6px; background:rgba(0,229,255,0.03);">
+          <p style="font-size:0.85rem; color:var(--muted); line-height:1.7;" data-esp="Desarrollado por la <strong style='color:var(--cyan)'>Universidad de Stanford</strong>. Audio sin compresión a 44.1–96 kHz. La única academia EdTech musical que lo integra." data-eng="Developed by <strong style='color:var(--cyan)'>Stanford University</strong>. Uncompressed audio at 44.1–96 kHz. The only EdTech music academy to integrate it.">Desarrollado por la <strong style="color:var(--cyan)">Universidad de Stanford</strong>. Audio sin compresión a 44.1–96 kHz. La única academia EdTech musical que lo integra.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="pricing-intro reveal">
+      <p class="section-label" data-esp="Planes" data-eng="Plans">Planes</p>
+      <h2 class="section-title" data-esp="Entra Como Quieras" data-eng="Join at Your Level">Entra Como Quieras</h2>
+      <p data-esp="62% más económico que Guitar Tricks. 93% más barato que Berklee. Y tú formas una banda real." data-eng="62% cheaper than Guitar Tricks. 93% less than Berklee. And you actually form a real band.">62% más económico que Guitar Tricks. 93% más barato que Berklee. Y tú formas una banda real.</p>
+    </div>
+
+    <div class="pricing-grid reveal">
+      <div class="price-card">
+        <p class="price-tier" data-esp="Para comenzar" data-eng="To start">Para comenzar</p>
+        <h3 class="price-name" data-esp="Básico" data-eng="Basic">Básico</h3>
+        <div class="price-amount">
+          <span class="amount">$14</span>
+          <span class="period" data-esp="USD / mes" data-eng="USD / month">USD / mes</span>
+        </div>
+        <ul class="price-features">
+          <li><span class="check">✓</span><span data-esp="Guitarra, Bajo, Batería, Teclado" data-eng="Guitar, Bass, Drums, Keys">Guitarra, Bajo, Batería, Teclado</span></li>
+          <li><span class="check">✓</span><span data-esp="Lives semanales Q&A" data-eng="Weekly Q&A lives">Lives semanales Q&A</span></li>
+          <li><span class="check">✓</span><span data-esp="JackTrip 1-4 usuarios" data-eng="JackTrip 1-4 users">JackTrip 1-4 usuarios</span></li>
+          <li><span class="check">✓</span><span data-esp="Comunidad de bandas" data-eng="Band community">Comunidad de bandas</span></li>
+          <li><span class="check">✓</span><span data-esp="Quick Wins diarios" data-eng="Daily Quick Wins">Quick Wins diarios</span></li>
+        </ul>
+        <a href="#contact" class="price-cta price-cta-outline" data-esp="Comenzar" data-eng="Get Started">Comenzar</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="featured-badge" data-esp="⭐ MÁS POPULAR" data-eng="⭐ MOST POPULAR">⭐ MÁS POPULAR</div>
+        <p class="price-tier" data-esp="Para crecer" data-eng="To grow">Para crecer</p>
+        <h3 class="price-name" data-esp="Avanzado" data-eng="Advanced">Avanzado</h3>
+        <div class="price-amount">
+          <span class="amount">$25</span>
+          <span class="period" data-esp="USD / mes" data-eng="USD / month">USD / mes</span>
+        </div>
+        <ul class="price-features">
+          <li><span class="check">✓</span><span data-esp="Todo lo del plan Básico" data-eng="Everything in Basic">Todo lo del plan Básico</span></li>
+          <li><span class="check">✓</span><span data-esp="Composición y producción" data-eng="Composition and production">Composición y producción</span></li>
+          <li><span class="check">✓</span><span data-esp="JackTrip ilimitado" data-eng="Unlimited JackTrip">JackTrip ilimitado</span></li>
+          <li><span class="check">✓</span><span data-esp="Mentorías grupales mensuales" data-eng="Monthly group mentorship">Mentorías grupales mensuales</span></li>
+          <li><span class="check">✓</span><span data-esp="Graba tu primer demo" data-eng="Record your first demo">Graba tu primer demo</span></li>
+        </ul>
+        <a href="#contact" class="price-cta price-cta-filled" data-esp="Quiero Este Plan" data-eng="I Want This Plan">Quiero Este Plan</a>
+      </div>
+
+      <div class="price-card">
+        <p class="price-tier" data-esp="Para profesionalizarte" data-eng="To go professional">Para profesionalizarte</p>
+        <h3 class="price-name" data-esp="Premium" data-eng="Premium">Premium</h3>
+        <div class="price-amount">
+          <span class="amount">$99</span>
+          <span class="period" data-esp="USD / mes" data-eng="USD / month">USD / mes</span>
+        </div>
+        <ul class="price-features">
+          <li><span class="check">✓</span><span data-esp="Todo lo del plan Avanzado" data-eng="Everything in Advanced">Todo lo del plan Avanzado</span></li>
+          <li><span class="check">✓</span><span data-esp="Red real de industria" data-eng="Real industry network">Red real de industria</span></li>
+          <li><span class="check">✓</span><span data-esp="Protección IP y asesoría legal" data-eng="IP protection and legal advice">Protección IP y asesoría legal</span></li>
+          <li><span class="check">✓</span><span data-esp="Showcases con cazatalentos" data-eng="Showcases with talent scouts">Showcases con cazatalentos</span></li>
+          <li><span class="check">✓</span><span data-esp="Management y booking" data-eng="Management and booking">Management y booking</span></li>
+        </ul>
+        <a href="#contact" class="price-cta price-cta-outline" data-esp="Ir Pro" data-eng="Go Pro">Ir Pro</a>
+      </div>
+    </div>
+
+    <p class="pricing-note reveal" data-esp="🎸 Oferta de Fundadores: <strong>$7 USD/mes permanente</strong> para los primeros 100 miembros. · 10 becas completas disponibles (Programa Apadrina un Músico)" data-eng="🎸 Founder Offer: <strong>$7 USD/month permanent</strong> for the first 100 members. · 10 full scholarships available (Apadrina un Músico Program)">🎸 Oferta de Fundadores: <strong>$7 USD/mes permanente</strong> para los primeros 100 miembros. · 10 becas completas disponibles (Programa Apadrina un Músico)</p>
+  </div>
+</section>
+
+<!-- SPONSORS -->
+<section id="sponsors">
+  <div class="container">
+    <div class="reveal" style="text-align:center; max-width:700px; margin:0 auto 4rem;">
+      <p class="section-label" data-esp="Para Marcas e Instituciones" data-eng="For Brands & Institutions">Para Marcas e Instituciones</p>
+      <h2 class="section-title" data-esp="Patrocina el Futuro de la Música" data-eng="Sponsor the Future of Music">Patrocina el Futuro de la Música</h2>
+      <p style="color:var(--muted); font-size:1.1rem; line-height:1.7;" data-esp="Accede directamente a miles de músicos apasionados en LATAM + US. Fender, Gibson, Yamaha — su próximo cliente está aquí." data-eng="Reach thousands of passionate musicians across LATAM + US. Fender, Gibson, Yamaha — your next customer is right here.">Accede directamente a miles de músicos apasionados en LATAM + US. Fender, Gibson, Yamaha — su próximo cliente está aquí.</p>
+    </div>
+
+    <div class="sponsor-tiers">
+      <div class="sponsor-card founding reveal">
+        <p class="sponsor-tier-name" data-esp="🏆 Founding Partner" data-eng="🏆 Founding Partner">🏆 Founding Partner</p>
+        <p class="sponsor-price">$5,000 <span data-esp="USD / año" data-eng="USD / year">USD / año</span></p>
+        <ul class="sponsor-bullets">
+          <li data-esp="Patrocinador titular en las 9 comunidades" data-eng="Title sponsor across all 9 communities">Patrocinador titular en las 9 comunidades</li>
+          <li data-esp="Contenido co-branded en TikTok/IG (310K–750K views Q1)" data-eng="Co-branded content on TikTok/IG (310K–750K views Q1)">Contenido co-branded en TikTok/IG (310K–750K views Q1)</li>
+          <li data-esp="Sorteos y premios con tu producto en toda la plataforma" data-eng="Giveaways with your product across the platform">Sorteos y premios con tu producto en toda la plataforma</li>
+          <li data-esp="Showcases exclusivos con tu marca" data-eng="Exclusive showcases with your brand">Showcases exclusivos con tu marca</li>
+          <li data-esp="Logo en todos los materiales de marketing" data-eng="Logo on all marketing materials">Logo en todos los materiales de marketing</li>
+          <li data-esp="Reporte mensual de alcance y métricas" data-eng="Monthly reach and metrics report">Reporte mensual de alcance y métricas</li>
+        </ul>
+      </div>
+
+      <div class="sponsor-card band reveal">
+        <p class="sponsor-tier-name" data-esp="🎸 Band Sponsor" data-eng="🎸 Band Sponsor">🎸 Band Sponsor</p>
+        <p class="sponsor-price" style="color:var(--magenta)">$2,500 <span data-esp="USD / año" data-eng="USD / year">USD / año</span></p>
+        <ul class="sponsor-bullets">
+          <li data-esp="Logo en 3 comunidades de tu elección" data-eng="Logo in 3 communities of your choice">Logo en 3 comunidades de tu elección</li>
+          <li data-esp="Paquetes de productos trimestrales para premios" data-eng="Quarterly product bundles for prizes">Paquetes de productos trimestrales para premios</li>
+          <li data-esp="Menciones en redes sociales mensuales" data-eng="Monthly social media mentions">Menciones en redes sociales mensuales</li>
+          <li data-esp="Acceso a showcase semestral de talentos" data-eng="Access to bi-annual talent showcase">Acceso a showcase semestral de talentos</li>
+        </ul>
+      </div>
+
+      <div class="sponsor-card track reveal">
+        <p class="sponsor-tier-name" data-esp="🎵 Track Sponsor" data-eng="🎵 Track Sponsor">🎵 Track Sponsor</p>
+        <p class="sponsor-price">$1,000 <span data-esp="USD / año" data-eng="USD / year">USD / año</span></p>
+        <ul class="sponsor-bullets">
+          <li data-esp="Logo + placement en 1 comunidad" data-eng="Logo + placement in 1 community">Logo + placement en 1 comunidad</li>
+          <li data-esp="Donación de productos para becas (in-kind)" data-eng="Product donations for scholarships (in-kind)">Donación de productos para becas (in-kind)</li>
+          <li data-esp="Mención mensual en redes sociales" data-eng="Monthly social media mention">Mención mensual en redes sociales</li>
+          <li data-esp="Certificado de impacto social anual" data-eng="Annual social impact certificate">Certificado de impacto social anual</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="text-align:center; padding:2rem; border:1px solid rgba(224,64,251,0.2); border-radius:8px; background:rgba(224,64,251,0.03); max-width:700px; margin:0 auto;" class="reveal">
+      <p style="font-family:'Black Ops One',cursive; font-size:1.3rem; margin-bottom:0.8rem;" data-esp="🤝 Programa Apadrina un Músico" data-eng="🤝 Apadrina un Músico Program">🤝 Programa Apadrina un Músico</p>
+      <p style="color:var(--muted); font-size:0.95rem; line-height:1.7; margin-bottom:1.2rem;" data-esp="Patrocina becas completas para jóvenes de comunidades vulnerables en Tijuana. En alianza con DIF Tijuana, Casa de la Cultura y CEART. 10 becas disponibles en Q1 2026." data-eng="Sponsor full scholarships for youth from vulnerable communities in Tijuana. In partnership with DIF Tijuana, Casa de la Cultura and CEART. 10 scholarships available in Q1 2026.">Patrocina becas completas para jóvenes de comunidades vulnerables en Tijuana. En alianza con DIF Tijuana, Casa de la Cultura y CEART. 10 becas disponibles en Q1 2026.</p>
+      <a href="#contact" class="btn-primary" style="display:inline-block;" data-esp="Quiero Apadrinar" data-eng="I Want to Sponsor">Quiero Apadrinar</a>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT STATS -->
+<section id="impact">
+  <div class="impact-inner">
+    <div class="impact-stats reveal">
+      <div class="impact-stat">
+        <span class="impact-num">$14.75B</span>
+        <p class="impact-label" data-esp="Mercado EdTech Musical para 2035 (CAGR 13.2%)" data-eng="EdTech Music Market by 2035 (CAGR 13.2%)">Mercado EdTech Musical para 2035</p>
+      </div>
+      <div class="impact-stat">
+        <span class="impact-num">0</span>
+        <p class="impact-label" data-esp="Competidores directos con nuestra combinación única" data-eng="Direct competitors with our unique combination">Competidores directos con nuestra combinación única</p>
+      </div>
+      <div class="impact-stat">
+        <span class="impact-num">9</span>
+        <p class="impact-label" data-esp="Comunidades especializadas en un ecosistema" data-eng="Specialized communities in one ecosystem">Comunidades especializadas en un ecosistema</p>
+      </div>
+      <div class="impact-stat">
+        <span class="impact-num">30</span>
+        <p class="impact-label" data-esp="Días de Cero a tu Banda" data-eng="Days from Zero to your Band">Días de Cero a tu Banda</p>
+      </div>
+    </div>
+    <div class="impact-text reveal">
+      <p class="section-label" data-esp="Mercado" data-eng="Market">Mercado</p>
+      <h2 class="section-title" data-esp="Océano Azul. Sin Competencia." data-eng="Blue Ocean. No Competition.">Océano Azul.<br>Sin Competencia.</h2>
+      <p data-esp="Fender Play: sin bandas. Yousician: sin latencia real. Berklee Online: $1,500 por curso. Nosotros: la única plataforma que une enseñanza musical + bandas virtuales reales + protección IP + contenido bilingüe nativo." data-eng="Fender Play: no bands. Yousician: no real latency. Berklee Online: $1,500 per course. Us: the only platform combining music teaching + real virtual bands + IP protection + native bilingual content.">Fender Play: sin bandas. Yousician: sin latencia real. Berklee Online: $1,500 por curso. Nosotros: la única plataforma que une enseñanza musical + bandas virtuales reales + protección IP + contenido bilingüe nativo.</p>
+      <p data-esp="Tijuana–San Diego: el corredor binacional con mayor densidad de músicos bilingües en el mundo. Nuestro backyard. Nuestro ventaja." data-eng="Tijuana–San Diego: the bi-national corridor with the highest density of bilingual musicians in the world. Our backyard. Our advantage.">Tijuana–San Diego: el corredor binacional con mayor densidad de músicos bilingües en el mundo. Nuestro backyard. Nuestra ventaja.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <p class="section-label" data-esp="Hablemos" data-eng="Let's Talk">Hablemos</p>
+        <h2 class="section-title" data-esp="¿Listo para el Próximo Nivel?" data-eng="Ready for the Next Level?">¿Listo para el<br>Próximo Nivel?</h2>
+        <p data-esp="Ya sea que quieras aprender, unirte a una banda, o patrocinar la nueva generación de músicos — comienza aquí." data-eng="Whether you want to learn, join a band, or sponsor the new generation of musicians — start here.">Ya sea que quieras aprender, unirte a una banda, o patrocinar la nueva generación de músicos — comienza aquí.</p>
+        <div class="contact-detail">
+          <span class="icon">📍</span>
+          <span>Tijuana, Baja California, México → Global</span>
+        </div>
+        <div class="contact-detail">
+          <span class="icon">✉️</span>
+          <span>hola@guitarzero.academy</span>
+        </div>
+        <div class="contact-detail">
+          <span class="icon">🎸</span>
+          <span data-esp="Lanzamiento: 15 de Marzo, 2026" data-eng="Launch: March 15, 2026">Lanzamiento: 15 de Marzo, 2026</span>
+        </div>
+        <div style="margin-top:2rem; display:flex; gap:1rem; flex-wrap:wrap;">
+          <a href="https://skool.com" target="_blank" class="btn-primary" data-esp="Unirme a la Academia" data-eng="Join the Academy">Unirme a la Academia</a>
+        </div>
+      </div>
+
+      <form class="contact-form reveal" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-field">
+            <label data-esp="Nombre" data-eng="Name">Nombre</label>
+            <input type="text" placeholder="Tu nombre" required>
+          </div>
+          <div class="form-field">
+            <label data-esp="Email" data-eng="Email">Email</label>
+            <input type="email" placeholder="tu@email.com" required>
+          </div>
+        </div>
+        <div class="form-field">
+          <label data-esp="Soy..." data-eng="I am...">Soy...</label>
+          <select>
+            <option data-esp="— Selecciona —" data-eng="— Select —">— Selecciona —</option>
+            <option data-esp="Músico Principiante" data-eng="Beginner Musician">Músico Principiante</option>
+            <option data-esp="Músico Intermedio" data-eng="Intermediate Musician">Músico Intermedio</option>
+            <option data-esp="Semi-Profesional" data-eng="Semi-Professional">Semi-Profesional</option>
+            <option data-esp="Patrocinador / Marca" data-eng="Sponsor / Brand">Patrocinador / Marca</option>
+            <option data-esp="Institución / Fundación (Grants)" data-eng="Institution / Foundation (Grants)">Institución / Fundación (Grants)</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label data-esp="Mensaje" data-eng="Message">Mensaje</label>
+          <textarea placeholder="Cuéntanos más..."></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="btn-primary" style="width:100%; border:none; cursor:pointer;" data-esp="Enviar →" data-eng="Send →">Enviar →</button>
+        </div>
+        <div id="form-success" style="display:none; color:var(--cyan); text-align:center; font-weight:600; padding:1rem;" data-esp="✓ Mensaje enviado. Te contactamos pronto." data-eng="✓ Message sent. We'll be in touch soon.">✓ Mensaje enviado. Te contactamos pronto.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">GuitarZero to BandRock</div>
+  <p class="footer-tagline" data-esp="De Cero a tu Banda en 30 Días · Tijuana → Global" data-eng="Zero to Your Band in 30 Days · Tijuana → Global">De Cero a tu Banda en 30 Días · Tijuana → Global</p>
+  <div class="footer-links">
+    <a href="#levels" data-esp="Tu Nivel" data-eng="Your Level">Tu Nivel</a>
+    <a href="#communities" data-esp="Comunidades" data-eng="Communities">Comunidades</a>
+    <a href="#pricing" data-esp="Planes" data-eng="Plans">Planes</a>
+    <a href="#sponsors" data-esp="Patrocinios" data-eng="Sponsorships">Patrocinios</a>
+    <a href="#contact" data-esp="Contacto" data-eng="Contact">Contacto</a>
+  </div>
+  <p class="footer-copy">© 2026 GuitarZero to BandRock. Tijuana, B.C., México.</p>
+</footer>
+
+<script>
+  // ---- LANGUAGE TOGGLE ----
+  let currentLang = 'esp';
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+
+    document.querySelectorAll('[data-esp]').forEach(el => {
+      const text = lang === 'esp' ? el.getAttribute('data-esp') : el.getAttribute('data-eng');
+      if (text) el.innerHTML = text;
+    });
+  }
+
+  // ---- SCROLL REVEAL ----
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // ---- FORM SUBMIT ----
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('form-success').style.display = 'block';
+    e.target.reset();
+    setTimeout(() => {
+      document.getElementById('form-success').style.display = 'none';
+    }, 5000);
+  }
+
+  // ---- NAV SCROLL EFFECT ----
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 80) {
+      nav.style.background = 'rgba(6,6,14,0.97)';
+      nav.style.backdropFilter = 'blur(10px)';
+    } else {
+      nav.style.background = '';
+      nav.style.backdropFilter = '';
+    }
+  });
+</script>
+</body>
+</html>
