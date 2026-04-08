@@ -1252,16 +1252,20 @@ mm.add("(prefers-reduced-motion: no-preference)", () => {
   });
 
   // Community cards stagger
-  gsap.from('.comm-card', {
-    opacity: 0, y: 50, scale: .95, stagger: .06, duration: .7, ease: 'power3.out',
-    scrollTrigger: { trigger: '#communities', start: 'top 75%' }
-  });
+  gsap.fromTo('.comm-card',
+    { opacity: 0, y: 50, scale: .95 },
+    { opacity: 1, y: 0, scale: 1, stagger: .07, duration: .7, ease: 'power3.out',
+      scrollTrigger: { trigger: '#communities', start: 'top 78%' }
+    }
+  );
 
   // Pricing cards stagger
-  gsap.from('.pricing-card', {
-    opacity: 0, y: 60, stagger: .08, duration: .8, ease: 'power3.out',
-    scrollTrigger: { trigger: '#pricing', start: 'top 80%' }
-  });
+  gsap.fromTo('.pricing-card',
+    { opacity: 0, y: 60 },
+    { opacity: 1, y: 0, stagger: .08, duration: .8, ease: 'power3.out',
+      scrollTrigger: { trigger: '#pricing', start: 'top 80%' }
+    }
+  );
 
   // (section-title handled by .reveal ScrollTrigger above)
 
