@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+._*
+
+# Sensitive directories
+LEGAL/
+FINANZAS/
+INCUBACION/
+OBSOLETOS/
+
+# Sensitive docs
+*Legal*.docx
+*Financiero*.docx
+
+# Internal tools
+entities.json
+mempalace.yaml
+OpenClaw/
+.claude/
+
+# Large media files
+*.mp4
+*.zip
+*.gif
+
+# Lock files
+*.~lock.*

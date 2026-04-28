@@ -1,0 +1,24 @@
+{
+  "id": "L00-slug-corto",
+  "nivel": "principiante",
+  "modulo": "",
+  "titulo": "",
+  "titulo_en": "",
+  "descripcion": "",
+  "descripcion_en": "",
+  "tags": [],
+  "duracion_segundos": 0,
+  "video_raw": "../02-VIDEOS-RAW/L00-slug-corto.mp4",
+  "video_final": "../03-VIDEOS-EDITED/L00-slug-corto-final.mp4",
+  "thumbnail": "../04-ASSETS/thumbnails/L00.png",
+  "tab_pdf": "../04-ASSETS/tabs-pdf/L00.pdf",
+  "backing_track": "",
+  "publicado": {
+    "skool": false,
+    "youtube": false,
+    "fecha": null,
+    "url": null
+  },
+  "estado": "script",
+  "notas": ""
+}

@@ -1,0 +1,14 @@
+./COMMANDS.md
+./tsconfig.json
+./src/Root.tsx
+./src/index.ts
+./src/compositions/WonderwallIntro.tsx
+./src/compositions/SevenNationArmy.tsx
+./src/components/TabViewer.tsx
+./src/components/GZBRBranding.tsx
+./src/components/ChordCircle.tsx
+./ESTRUCTURA.txt
+./package.json
+./remotion.config.ts
+./README.md
+./.gitignore

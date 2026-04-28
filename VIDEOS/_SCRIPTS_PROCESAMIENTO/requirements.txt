@@ -1,0 +1,7 @@
+openai-whisper
+mlx-whisper
+ffmpeg-python
+webrtcvad
+numpy
+tqdm
+colorama

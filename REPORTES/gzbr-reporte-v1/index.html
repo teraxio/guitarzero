@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GZBR — Reporte Ejecutivo V8.3</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c: #00C8E8;
+    --m: #E040FB;
+    --dark: #0a0a0f;
+    --ink: #1A2E3A;
+    --muted: #5A7080;
+    --bg: #F4F7FA;
+    --white: #FFFFFF;
+    --grad: linear-gradient(135deg, #00C8E8, #E040FB);
+    --grad-soft: linear-gradient(135deg, #E8F9FC, #FAE8FF);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: var(--dark);
+    padding: 56px 48px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; top: -120px; right: -80px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,200,232,.15), transparent 70%);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: '';
+    position: absolute; bottom: -80px; left: -60px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(224,64,251,.1), transparent 70%);
+    border-radius: 50%;
+  }
+
+  .cover-logo {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 32px;
+    position: relative; z-index: 1;
+  }
+  .cover-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--grad);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cover-brand {
+    font-size: 2rem; font-weight: 900; letter-spacing: -.04em;
+    background: var(--grad);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  .cover-title {
+    font-size: 2.8rem; font-weight: 900; line-height: 1.05;
+    letter-spacing: -.03em; color: #fff;
+    margin-bottom: 12px; position: relative; z-index: 1;
+  }
+  .cover-sub {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-size: 1.15rem;
+    color: rgba(255,255,255,.55); margin-bottom: 28px;
+    position: relative; z-index: 1;
+  }
+  .cover-tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    position: relative; z-index: 1;
+  }
+  .tag {
+    padding: 4px 12px; border-radius: 20px; font-size: .75rem;
+    font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  }
+  .tag-c { background: rgba(0,200,232,.15); color: var(--c); border: 1px solid rgba(0,200,232,.25); }
+  .tag-m { background: rgba(224,64,251,.15); color: var(--m); border: 1px solid rgba(224,64,251,.25); }
+  .tag-w { background: rgba(255,255,255,.08); color: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.12); }
+
+  .cover-meta {
+    margin-top: 32px; padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,.08);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    position: relative; z-index: 1;
+  }
+  .cover-meta span { font-size: .8rem; color: rgba(255,255,255,.4); letter-spacing: .04em; }
+
+  /* ── KPI BAR ── */
+  .kpi-bar {
+    background: var(--white);
+    border-top: 3px solid transparent;
+    border-image: var(--grad) 1;
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    box-shadow: 0 4px 20px rgba(0,0,0,.06);
+  }
+  .kpi {
+    padding: 24px 20px; text-align: center;
+    border-right: 1px solid rgba(0,0,0,.06);
+  }
+  .kpi:last-child { border-right: none; }
+  .kpi-num {
+    font-size: 2rem; font-weight: 900; line-height: 1;
+    background: var(--grad);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 4px;
+  }
+  .kpi-label {
+    font-size: .65rem; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+
+  /* ── CONTENT ── */
+  .content { max-width: 1100px; margin: 0 auto; padding: 40px 32px; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .row-full { margin-bottom: 24px; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card-header-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .card-title { font-size: .95rem; font-weight: 700; }
+  .card-body { padding: 20px; }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    padding: 14px 20px; border-radius: 12px 12px 0 0;
+    font-size: .8rem; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: #fff;
+  }
+  .sh-cyan { background: linear-gradient(135deg, #00A8C8, #00C8E8); }
+  .sh-magenta { background: linear-gradient(135deg, #C020DB, #E040FB); }
+  .sh-dark { background: linear-gradient(135deg, #1A2E3A, #2A4E6A); }
+  .sh-purple { background: linear-gradient(135deg, #6020B0, #8040D0); }
+  .sh-green { background: linear-gradient(135deg, #108848, #20B868); }
+
+  /* ── INSIGHT BOXES ── */
+  .insight {
+    padding: 14px 16px; border-radius: 10px;
+    border-left: 3px solid; margin-bottom: 12px;
+  }
+  .insight:last-child { margin-bottom: 0; }
+  .insight-c { background: #E8F9FC; border-color: var(--c); }
+  .insight-m { background: #FAE8FF; border-color: var(--m); }
+  .insight-g { background: #E8F5ED; border-color: #20B868; }
+  .insight-o { background: #FEF3E8; border-color: #F08030; }
+  .insight-b { background: #E8EDF5; border-color: #4060B0; }
+  .insight strong { display: block; font-size: .8rem; font-weight: 700; margin-bottom: 3px; }
+  .insight p { font-size: .82rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    padding: 10px 14px; text-align: left;
+    font-size: .7rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: #fff;
+    background: linear-gradient(135deg, #1A3A4A, #2A5A7A);
+  }
+  th:first-child { border-radius: 0; }
+  td {
+    padding: 10px 14px; font-size: .83rem;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #F8FAFB; }
+  tr:hover td { background: #EEF5FA; }
+
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 12px;
+    font-size: .7rem; font-weight: 700;
+  }
+  .badge-c { background: rgba(0,200,232,.12); color: #008AAA; }
+  .badge-m { background: rgba(224,64,251,.12); color: #9010BB; }
+  .badge-g { background: rgba(32,184,104,.12); color: #108848; }
+  .badge-o { background: rgba(240,128,48,.12); color: #C06010; }
+
+  /* ── PROGRESS ── */
+  .progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .progress-label { font-size: .8rem; font-weight: 600; width: 140px; flex-shrink: 0; }
+  .progress-bar-bg { flex: 1; height: 8px; background: rgba(0,0,0,.08); border-radius: 4px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 4px; background: var(--grad); }
+  .progress-val { font-size: .78rem; font-weight: 700; width: 40px; text-align: right; color: var(--muted); }
+
+  /* ── TIER CARDS ── */
+  .tiers { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .tier-card {
+    border-radius: 10px; padding: 16px 12px; text-align: center;
+    border: 1px solid rgba(0,0,0,.07);
+    background: var(--white);
+  }
+  .tier-name { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .tier-price {
+    font-size: 1.5rem; font-weight: 900;
+    background: var(--grad);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    line-height: 1; margin-bottom: 4px;
+  }
+  .tier-mo { font-size: .68rem; color: var(--muted); }
+  .tier-desc { font-size: .72rem; color: var(--muted); margin-top: 8px; line-height: 1.4; }
+
+  /* ── TIMELINE ── */
+  .timeline-row {
+    display: flex; gap: 16px; margin-bottom: 12px;
+    align-items: flex-start;
+  }
+  .tl-dot {
+    width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .72rem; font-weight: 800; color: #fff;
+    background: var(--grad);
+    margin-top: 2px;
+  }
+  .tl-content { flex: 1; }
+  .tl-title { font-size: .88rem; font-weight: 700; margin-bottom: 2px; }
+  .tl-sub { font-size: .78rem; color: var(--muted); }
+  .tl-quote {
+    display: inline-block; margin-top: 4px;
+    padding: 2px 8px; border-radius: 6px;
+    background: var(--grad-soft);
+    font-size: .75rem; font-style: italic; color: #008AAA;
+  }
+
+  /* ── COMMUNITIES ── */
+  .comm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .comm-item {
+    padding: 12px 14px; border-radius: 10px;
+    background: var(--bg); border: 1px solid rgba(0,0,0,.07);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .comm-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--grad); flex-shrink: 0; }
+  .comm-name { font-size: .82rem; font-weight: 700; }
+  .comm-role { font-size: .72rem; color: var(--muted); }
+
+  /* ── STATUS ── */
+  .status-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,.05); }
+  .status-row:last-child { border-bottom: none; }
+  .status-label { font-size: .83rem; font-weight: 600; }
+  .status-val { font-size: .8rem; }
+  .dot-green { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #20B868; margin-right: 5px; }
+  .dot-yellow { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #F0B030; margin-right: 5px; }
+  .dot-red { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #E83030; margin-right: 5px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--dark); padding: 28px 48px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; gap: 16px;
+  }
+  .footer-brand {
+    font-size: 1.2rem; font-weight: 900; letter-spacing: -.03em;
+    background: var(--grad);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .footer-meta { font-size: .75rem; color: rgba(255,255,255,.35); }
+  .footer-url { font-size: .78rem; color: var(--c); font-weight: 600; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 3px; background: var(--grad); margin: 32px 0; border-radius: 2px; }
+  .section-label {
+    font-size: .7rem; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--c); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::before { content: ''; display: block; width: 20px; height: 1.5px; background: var(--c); }
+
+  @media print {
+    body { font-size: 12px; }
+    .cover { padding: 36px 32px 32px; }
+    .content { padding: 24px; }
+    .kpi-bar { break-inside: avoid; }
+    .card { break-inside: avoid; box-shadow: none; border: 1px solid rgba(0,0,0,.1); }
+  }
+
+  @media (max-width: 768px) {
+    .kpi-bar { grid-template-columns: repeat(3, 1fr); }
+    .row, .row-3, .tiers { grid-template-columns: 1fr; }
+    .comm-grid { grid-template-columns: 1fr 1fr; }
+    .cover-title { font-size: 2rem; }
+    .content { padding: 24px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ COVER ══════════════ -->
+<div class="cover">
+  <div class="cover-logo">
+    <div class="cover-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    </div>
+    <span class="cover-brand">GZBR</span>
+  </div>
+  <div class="cover-title">Reporte Ejecutivo<br>GuitarZero to BandRock</div>
+  <div class="cover-sub">"Nadie deja una banda. La gente deja de tocar sola."</div>
+  <div class="cover-tags">
+    <span class="tag tag-c">V8.3</span>
+    <span class="tag tag-m">EdTech Musical</span>
+    <span class="tag tag-w">SaaS · LLC Delaware</span>
+    <span class="tag tag-w">Tijuana → Global</span>
+    <span class="tag tag-w">Bootstrap · $0 externo</span>
+    <span class="tag tag-c">Bilingüe EN/ES</span>
+  </div>
+  <div class="cover-meta">
+    <span>GuitarZero to BandRock LLC · V8.3 · 7 Abril 2026</span>
+    <span>Fundadores: José Luis (CEO 50%) · Javier (Dir. Artístico 50%)</span>
+  </div>
+</div>
+
+<!-- ══════════════ KPI BAR ══════════════ -->
+<div class="kpi-bar">
+  <div class="kpi">
+    <div class="kpi-num">$3.32B</div>
+    <div class="kpi-label">Mercado Global 2025</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-num">0</div>
+    <div class="kpi-label">Competidores directos</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-num">9</div>
+    <div class="kpi-label">Comunidades activas</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-num">&lt;25ms</div>
+    <div class="kpi-label">Latencia JackTrip</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-num">30</div>
+    <div class="kpi-label">Días a tu banda</div>
+  </div>
+</div>
+
+<!-- ══════════════ CONTENT ══════════════ -->
+<div class="content">
+
+  <!-- ESTADO GENERAL -->
+  <div class="section-label">Estado General del Proyecto</div>
+  <div class="row">
+
+    <div class="card">
+      <div class="section-header sh-cyan">Posicionamiento Estratégico</div>
+      <div class="card-body">
+        <div class="insight insight-c">
+          <strong>Blue Ocean — Cero Competidores Directos</strong>
+          <p>Ninguna plataforma combina: banda real + JackTrip &lt;25ms + bilingüe + IP legal + red industrial. GZBR es la primera en el mundo en este segmento.</p>
+        </div>
+        <div class="insight insight-m">
+          <strong>Mercado desatendido: músicos en soledad</strong>
+          <p>80% abandona la banda escolar no por falta de talento, sino de comunidad. 75% se arrepiente. El TAM de GZBR nace de esa fractura.</p>
+        </div>
+        <div class="insight insight-g">
+          <strong>Diferenciador técnico: JackTrip</strong>
+          <p>&lt;25ms de latencia real — disponible en TODOS los tiers. Como estar en la misma sala. Ningún competidor lo ofrece en modalidad comunitaria.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-header sh-magenta">Estado Operativo · Abril 2026</div>
+      <div class="card-body">
+        <div class="status-row">
+          <span class="status-label">Entidad legal</span>
+          <span class="status-val"><span class="dot-green"></span>LLC Delaware activa</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Modelo financiero</span>
+          <span class="status-val"><span class="dot-green"></span>Auditado · Cascada 100%</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Sitio web V9</span>
+          <span class="status-val"><span class="dot-green"></span>Publicado · GitHub Pages</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Stripe Billing (Credits)</span>
+          <span class="status-val"><span class="dot-yellow"></span>En configuración</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">JackTrip integración</span>
+          <span class="status-val"><span class="dot-yellow"></span>En validación técnica</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Plataforma Skool</span>
+          <span class="status-val"><span class="dot-yellow"></span>Pipeline en instalación</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Lanzamiento oficial</span>
+          <span class="status-val"><span class="dot-yellow"></span>Última semana Mayo 2026</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Capital externo</span>
+          <span class="status-val"><span class="dot-green"></span>Bootstrap · $0 externo</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PRICING -->
+  <div class="section-label">Estructura de Precios · V8.3</div>
+  <div class="card row-full">
+    <div class="section-header sh-dark">5 Tiers de Suscripción · USD/mes · Stripe Billing (NO blockchain)</div>
+    <div class="card-body">
+      <div class="tiers">
+        <div class="tier-card">
+          <div class="tier-name">Básico</div>
+          <div class="tier-price">$14</div>
+          <div class="tier-mo">/mes</div>
+          <div class="tier-desc">1 instrumento + comunidad · Sesiones 1-4 · Daily Quick Wins · BandLoop™</div>
+        </div>
+        <div class="tier-card" style="border-color:rgba(0,200,232,.3);background:linear-gradient(135deg,#F0FBFE,#FAF0FF)">
+          <div class="tier-name" style="color:var(--c)">Avanzado ⭐</div>
+          <div class="tier-price">$25</div>
+          <div class="tier-mo">/mes</div>
+          <div class="tier-desc">Todo Básico · Songwriting · Sesiones ilimitadas · Mentoría grupal · 1er demo</div>
+        </div>
+        <div class="tier-card">
+          <div class="tier-name">Premium</div>
+          <div class="tier-price">$99</div>
+          <div class="tier-mo">/mes</div>
+          <div class="tier-desc">9 comunidades · Red industrial · IP Fortress · Talent scout showcases</div>
+        </div>
+        <div class="tier-card">
+          <div class="tier-name">Pro</div>
+          <div class="tier-price">$149</div>
+          <div class="tier-mo">/mes</div>
+          <div class="tier-desc">Todo Premium · 1:1 semanal · Grabación estudio · Distribución digital</div>
+        </div>
+        <div class="tier-card" style="border-color:rgba(224,64,251,.25);background:linear-gradient(135deg,#FAF0FF,#F0FBFE)">
+          <div class="tier-name" style="color:var(--m)">Industria</div>
+          <div class="tier-price">$249</div>
+          <div class="tier-mo">/mes</div>
+          <div class="tier-desc">Sellos & profesionales · Licencia · White-label · Account manager</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding:12px 14px;background:#E8F9FC;border-radius:10px;border-left:3px solid var(--c)">
+        <strong style="font-size:.8rem">Oferta Fundadores:</strong>
+        <span style="font-size:.8rem;color:var(--muted)"> $7/mes permanente — primeros 100 miembros. 62% más accesible que Guitar Tricks ($19.95).</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASCADA FINANCIERA -->
+  <div class="row">
+    <div class="card">
+      <div class="section-header sh-purple">Cascada de Distribución (INVIOLABLE · suma 100%)</div>
+      <div class="card-body">
+        <div class="progress-row">
+          <span class="progress-label">Utilidad 50/50</span>
+          <div class="progress-bar-bg"><div class="progress-bar" style="width:40%"></div></div>
+          <span class="progress-val">40%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">ICAs (instructores)</span>
+          <div class="progress-bar-bg"><div class="progress-bar" style="width:20%"></div></div>
+          <span class="progress-val">20%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Operaciones</span>
+          <div class="progress-bar-bg"><div class="progress-bar" style="width:10%"></div></div>
+          <span class="progress-val">10%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Dirs. externos</span>
+          <div class="progress-bar-bg"><div class="progress-bar" style="width:9%"></div></div>
+          <span class="progress-val">9%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Rol CEO</span>
+          <div class="progress-bar-bg"><div class="progress-bar" style="width:8%"></div></div>
+          <span class="progress-val">8%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Rol Dir. Artístico</span>
+          <div class="progress-bar-bg"><div class="progress-bar" style="width:8%"></div></div>
+          <span class="progress-val">8%</span>
+        </div>
+        <div class="progress-row">
+          <span class="progress-label">Reserva</span>
+          <div class="progress-bar-bg"><div class="progress-bar" style="width:5%"></div></div>
+          <span class="progress-val">5%</span>
+        </div>
+        <div style="margin-top:12px;font-size:.75rem;color:var(--muted);padding:8px 10px;background:#F4F7FA;border-radius:8px">
+          Modelo ICA: 15% base + 5% bono = 20% híbrido. GZBR Credits vía Stripe Billing (NO blockchain).
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-header sh-cyan">Comparativa vs Competencia</div>
+      <div class="card-body" style="padding:0">
+        <table>
+          <thead>
+            <tr>
+              <th>Plataforma</th>
+              <th>Banda real</th>
+              <th>&lt;25ms</th>
+              <th>Bilingüe</th>
+              <th>IP Legal</th>
+              <th>Precio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:linear-gradient(135deg,rgba(0,200,232,.06),rgba(224,64,251,.04))">
+              <td><strong style="color:#008AAA">GZBR ⚡</strong></td>
+              <td><span class="badge badge-g">✓</span></td>
+              <td><span class="badge badge-g">✓</span></td>
+              <td><span class="badge badge-g">✓</span></td>
+              <td><span class="badge badge-g">✓</span></td>
+              <td><strong>$14</strong></td>
+            </tr>
+            <tr>
+              <td>Fender Play</td>
+              <td style="color:#C44">✗</td>
+              <td style="color:#C44">✗</td>
+              <td style="color:#C44">✗</td>
+              <td style="color:#C44">✗</td>
+              <td>$14.99</td>
+            </tr>
+            <tr>
+              <td>Yousician</td>
+              <td style="color:#C44">✗</td>
+              <td style="color:#C44">✗</td>
+              <td style="color:#888">Parcial</td>
+              <td style="color:#C44">✗</td>
+              <td>$19.99</td>
+            </tr>
+            <tr>
+              <td>Guitar Tricks</td>
+              <td style="color:#C44">✗</td>
+              <td style="color:#C44">✗</td>
+              <td style="color:#C44">✗</td>
+              <td style="color:#C44">✗</td>
+              <td>$19.95</td>
+            </tr>
+            <tr>
+              <td>YouTube</td>
+              <td style="color:#C44">✗</td>
+              <td style="color:#C44">✗</td>
+              <td style="color:#888">Parcial</td>
+              <td style="color:#C44">✗</td>
+              <td>Gratis</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MÉTODO + COMUNIDADES -->
+  <div class="row">
+    <div class="card">
+      <div class="section-header sh-cyan">BandLoop™ Method — 30 Días</div>
+      <div class="card-body">
+        <div class="timeline-row">
+          <div class="tl-dot">W1</div>
+          <div class="tl-content">
+            <div class="tl-title">Semana 1 — Chispa (Spark)</div>
+            <div class="tl-sub">Primer riff, primer loop, primera nota real.</div>
+            <div class="tl-quote">"Eso salió de mí"</div>
+          </div>
+        </div>
+        <div class="timeline-row">
+          <div class="tl-dot">W2</div>
+          <div class="tl-content">
+            <div class="tl-title">Semana 2 — Groove (Ritmo)</div>
+            <div class="tl-sub">Primera sesión con banda vía JackTrip &lt;25ms.</div>
+            <div class="tl-quote">"Tengo una banda"</div>
+          </div>
+        </div>
+        <div class="timeline-row">
+          <div class="tl-dot">W3</div>
+          <div class="tl-content">
+            <div class="tl-title">Semana 3 — Flow (Flujo)</div>
+            <div class="tl-sub">Composición, producción, IP Fortress activo.</div>
+            <div class="tl-quote">"Esto es MÍO"</div>
+          </div>
+        </div>
+        <div class="timeline-row">
+          <div class="tl-dot">W4</div>
+          <div class="tl-content">
+            <div class="tl-title">Semana 4 — Lanzamiento</div>
+            <div class="tl-sub">Showcase, demo grabado, conexión industrial.</div>
+            <div class="tl-quote">"Soy músico"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-header sh-magenta">Las 9 Comunidades (Mundos)</div>
+      <div class="card-body">
+        <div class="comm-grid">
+          <div class="comm-item"><div class="comm-dot"></div><div><div class="comm-name">Guitarra</div><div class="comm-role">Zero to Rockstar</div></div></div>
+          <div class="comm-item"><div class="comm-dot"></div><div><div class="comm-name">Bajo</div><div class="comm-role">Groove Master</div></div></div>
+          <div class="comm-item"><div class="comm-dot"></div><div><div class="comm-name">Batería</div><div class="comm-role">Rhythm Masters</div></div></div>
+          <div class="comm-item"><div class="comm-dot"></div><div><div class="comm-name">Voz</div><div class="comm-role">Vocal Academy</div></div></div>
+          <div class="comm-item"><div class="comm-dot"></div><div><div class="comm-name">Teclados</div><div class="comm-role">Keys & Synths</div></div></div>
+          <div class="comm-item"><div class="comm-dot"></div><div><div class="comm-name">Management</div><div class="comm-role">Band Management</div></div></div>
+          <div class="comm-item"><div class="comm-dot"></div><div><div class="comm-name">Legal</div><div class="comm-role">Music Law</div></div></div>
+          <div class="comm-item"><div class="comm-dot" style="background:var(--m)"></div><div><div class="comm-name">IP Fortress</div><div class="comm-role">Prop. Intelectual</div></div></div>
+          <div class="comm-item"><div class="comm-dot"></div><div><div class="comm-name">Tecnología</div><div class="comm-role">TechBand Lab</div></div></div>
+        </div>
+        <div style="margin-top:14px;padding:10px 12px;background:#FAE8FF;border-radius:8px;border-left:3px solid var(--m)">
+          <strong style="font-size:.78rem">Principio clave:</strong>
+          <span style="font-size:.78rem;color:var(--muted)"> "Entras por una puerta. Terminas explorándolas todas."</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SITIO WEB + CAMBIOS -->
+  <div class="section-label">Sitio Web · Historial de Versiones</div>
+  <div class="card row-full">
+    <div class="section-header sh-green">Website GZBR — Estado y Cambios Recientes</div>
+    <div class="card-body">
+      <table>
+        <thead>
+          <tr>
+            <th>Versión</th>
+            <th>Fecha</th>
+            <th>Cambio principal</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>V9 (index_v9.html)</strong></td>
+            <td>7 Abr 2026</td>
+            <td>Rediseño completo: cyberpunk dark, GSAP animations, 5 tiers, glassmorphism, bilingüe, cursor custom, partículas</td>
+            <td><span class="badge badge-g">Activo</span></td>
+          </tr>
+          <tr>
+            <td>V3 (indexWEB_v3.html)</td>
+            <td>Mar 2026</td>
+            <td>Versión anterior con 3 tiers, diseño básico</td>
+            <td><span class="badge badge-o">Archivo</span></td>
+          </tr>
+          <tr>
+            <td>V2 (index_v2.html)</td>
+            <td>Feb 2026</td>
+            <td>Primera iteración web</td>
+            <td><span class="badge badge-o">Archivo</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div class="insight insight-c" style="margin:0">
+          <strong>Fix crítico aplicado</strong>
+          <p>Timeline W1-W4 invisible por conflicto CSS/GSAP (.reveal + gsap.from). Resuelto con gsap.fromTo.</p>
+        </div>
+        <div class="insight insight-m" style="margin:0">
+          <strong>GZBR logo aumentado 3×</strong>
+          <p>De text-lg (18px) a clamp(2.8rem, 7vw, 5.5rem). Siempre visible en mobile y desktop.</p>
+        </div>
+        <div class="insight insight-g" style="margin:0">
+          <strong>Fecha corregida</strong>
+          <p>Lanzamiento "15 Mar 2026" → "Última semana Mayo 2026" en hero y footer.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<div class="footer">
+  <div>
+    <div class="footer-brand">GuitarZero to BandRock</div>
+    <div class="footer-meta">LLC Delaware · V8.3 · Reporte generado: 7 Abril 2026</div>
+  </div>
+  <div style="text-align:center">
+    <div class="footer-meta" style="margin-bottom:4px">Sitio web actual</div>
+    <div class="footer-url">teraxio.github.io/guitarzero</div>
+  </div>
+  <div style="text-align:right">
+    <div class="footer-meta">Fundadores</div>
+    <div style="font-size:.82rem;color:rgba(255,255,255,.5)">José Luis · CEO 50%</div>
+    <div style="font-size:.82rem;color:rgba(255,255,255,.5)">Javier · Dir. Artístico 50%</div>
+  </div>
+</div>
+
+</body>
+</html>

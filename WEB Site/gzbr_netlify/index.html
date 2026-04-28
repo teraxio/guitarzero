@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GZBR — Panel Co-Fundadores</title>
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --card: #1a1a1a;
+    --card2: #222;
+    --red: #e63946;
+    --gold: #f4a261;
+    --teal: #2a9d8f;
+    --green: #57cc99;
+    --yellow: #ffb703;
+    --blue: #4895ef;
+    --purple: #7b2d8b;
+    --text: #f1f1f1;
+    --muted: #888;
+    --border: #333;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; }
+  a { color: var(--gold); text-decoration: none; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,13,13,0.96); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; height: 54px;
+  }
+  .nav-logo { font-size: 18px; font-weight: 800; color: var(--red); letter-spacing: 1px; }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 20px; }
+  .nav-links a { color: var(--muted); font-size: 13px; font-weight: 500; transition: color .2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-count { font-size: 12px; background: var(--red); color: white; padding: 3px 10px; border-radius: 20px; font-weight: 700; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a0505 50%, #0d0d0d 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 20px 50px;
+    text-align: center;
+  }
+  .hero-tag { color: var(--gold); font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+  .hero h1 { font-size: clamp(32px, 6vw, 64px); font-weight: 900; line-height: 1.1; margin-bottom: 14px; }
+  .hero h1 .red { color: var(--red); }
+  .hero h1 .gold { color: var(--gold); }
+  .hero-sub { color: var(--muted); font-size: 16px; max-width: 600px; margin: 0 auto 30px; }
+  .countdown-box {
+    display: inline-flex; gap: 16px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 18px 32px; margin-bottom: 30px;
+  }
+  .count-item { text-align: center; }
+  .count-num { font-size: 36px; font-weight: 900; color: var(--red); line-height: 1; }
+  .count-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+  .count-sep { font-size: 30px; color: var(--border); align-self: center; }
+  .hero-launch { font-size: 13px; color: var(--green); font-weight: 600; }
+
+  /* SECTIONS */
+  section { padding: 50px 20px; max-width: 1100px; margin: 0 auto; }
+  .section-title {
+    font-size: 22px; font-weight: 800; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
+  .section-sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+
+  /* METRIC CARDS */
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 40px; }
+  .metric-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px; position: relative; overflow: hidden;
+  }
+  .metric-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent, var(--red));
+  }
+  .metric-icon { font-size: 28px; margin-bottom: 10px; }
+  .metric-value { font-size: 28px; font-weight: 900; color: var(--text); line-height: 1; }
+  .metric-label { font-size: 12px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  .metric-sub { font-size: 13px; color: var(--gold); margin-top: 8px; }
+
+  /* TEAM */
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+  .team-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 22px; transition: border-color .2s, transform .15s;
+    cursor: pointer; position: relative;
+  }
+  .team-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .team-card.active-card { border-color: var(--red); }
+  .team-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .avatar {
+    width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 18px; font-weight: 800; flex-shrink: 0;
+    border: 2px solid var(--border);
+  }
+  .team-name { font-size: 15px; font-weight: 700; line-height: 1.3; }
+  .team-role { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .team-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .badge {
+    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+    text-transform: uppercase; letter-spacing: .5px;
+  }
+  .badge-firmado { background: rgba(87,204,153,.15); color: var(--green); border: 1px solid rgba(87,204,153,.3); }
+  .badge-pendiente { background: rgba(255,183,3,.15); color: var(--yellow); border: 1px solid rgba(255,183,3,.3); }
+  .badge-buscando { background: rgba(136,136,136,.15); color: var(--muted); border: 1px solid rgba(136,136,136,.3); }
+  .badge-interim { background: rgba(230,57,70,.15); color: var(--red); border: 1px solid rgba(230,57,70,.3); }
+  .badge-founder { background: rgba(244,162,97,.15); color: var(--gold); border: 1px solid rgba(244,162,97,.3); }
+  .badge-ica { background: rgba(72,149,239,.15); color: var(--blue); border: 1px solid rgba(72,149,239,.3); }
+  .team-dist { font-size: 13px; color: var(--muted); }
+  .team-dist span { color: var(--gold); font-weight: 700; }
+  .interim-note {
+    margin-top: 12px; padding: 10px 12px; background: rgba(230,57,70,.08);
+    border-left: 3px solid var(--red); border-radius: 0 8px 8px 0;
+    font-size: 12px; color: var(--muted);
+  }
+  .interim-note strong { color: var(--red); }
+  .view-btn {
+    width: 100%; margin-top: 14px; padding: 9px;
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all .2s;
+  }
+  .view-btn:hover { background: var(--red); border-color: var(--red); }
+
+  /* CASCADA */
+  .cascada-container { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+  .cascada-title { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+  .cascada-bar-wrap { margin-bottom: 14px; }
+  .cascada-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
+  .cascada-label .name { font-weight: 600; }
+  .cascada-label .pct { color: var(--gold); font-weight: 800; }
+  .cascada-bar { height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+  .cascada-fill { height: 100%; border-radius: 5px; transition: width 1s ease; }
+  .cascada-total {
+    margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; font-size: 14px; font-weight: 700;
+  }
+  .cascada-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+  /* TABS */
+  .tabs-nav {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;
+    border-bottom: 1px solid var(--border); padding-bottom: 16px;
+  }
+  .tab-btn {
+    padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);
+    background: transparent; color: var(--muted); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all .2s; white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text); border-color: var(--text); }
+  .tab-btn.active { background: var(--red); border-color: var(--red); color: white; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* TASK LIST */
+  .task-group { margin-bottom: 28px; }
+  .task-group-title {
+    font-size: 13px; font-weight: 700; color: var(--gold); text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .task-group-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+  .task-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 14px; background: var(--card2); border-radius: 10px;
+    margin-bottom: 8px; border: 1px solid transparent; transition: border-color .2s;
+  }
+  .task-item:hover { border-color: var(--border); }
+  .task-item.done { opacity: .5; }
+  .task-item.done .task-text { text-decoration: line-through; color: var(--muted); }
+  .task-cb {
+    width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border);
+    flex-shrink: 0; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; transition: all .2s; margin-top: 1px;
+  }
+  .task-cb.checked { background: var(--green); border-color: var(--green); }
+  .task-cb.checked::after { content: '✓'; color: white; font-size: 11px; font-weight: 800; }
+  .task-body { flex: 1; }
+  .task-text { font-size: 14px; line-height: 1.4; }
+  .task-meta { display: flex; gap: 10px; margin-top: 5px; flex-wrap: wrap; }
+  .task-date { font-size: 11px; color: var(--muted); }
+  .task-date.urgent { color: var(--red); font-weight: 700; }
+  .task-date.soon { color: var(--yellow); }
+  .task-owner { font-size: 11px; font-weight: 600; }
+  .task-ref { font-size: 11px; color: var(--teal); }
+  .priority-high { border-left: 3px solid var(--red); padding-left: 10px; }
+  .priority-mid { border-left: 3px solid var(--yellow); padding-left: 10px; }
+
+  /* PROGRESS */
+  .progress-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .progress-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px;
+  }
+  .progress-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .progress-name { font-size: 14px; font-weight: 700; }
+  .progress-pct { font-size: 22px; font-weight: 900; }
+  .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width .5s ease; }
+  .progress-detail { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .semaforo {
+    display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px;
+  }
+  .sem-green { background: var(--green); }
+  .sem-yellow { background: var(--yellow); }
+  .sem-red { background: var(--red); }
+
+  /* EXPORT */
+  .export-section { text-align: center; padding: 40px 20px; }
+  .export-btn {
+    background: var(--green); color: #0d0d0d; font-size: 15px; font-weight: 800;
+    padding: 14px 36px; border-radius: 12px; border: none; cursor: pointer;
+    transition: opacity .2s; margin: 8px;
+  }
+  .export-btn:hover { opacity: .85; }
+  .export-btn.whatsapp { background: #25D366; }
+  .export-btn.reset-btn { background: var(--border); color: var(--muted); font-size: 13px; }
+  .export-output {
+    display: none; margin-top: 20px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; text-align: left; font-size: 13px; white-space: pre-wrap;
+    max-height: 300px; overflow-y: auto; font-family: monospace;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border); padding: 30px 20px;
+    text-align: center; color: var(--muted); font-size: 13px;
+  }
+  footer strong { color: var(--red); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.8);
+    z-index: 200; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+    padding: 28px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto;
+  }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .modal-title { font-size: 18px; font-weight: 800; }
+  .modal-close { background: none; border: none; color: var(--muted); font-size: 24px; cursor: pointer; }
+  .modal-close:hover { color: var(--text); }
+
+  /* UTILS */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .pill-red { background: rgba(230,57,70,.2); color: var(--red); }
+  .pill-gold { background: rgba(244,162,97,.2); color: var(--gold); }
+  .pill-green { background: rgba(87,204,153,.2); color: var(--green); }
+
+  @media(max-width: 600px) {
+    .nav-links { display: none; }
+    .countdown-box { gap: 10px; padding: 14px 16px; }
+    .count-num { font-size: 28px; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+    section { padding: 36px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">GUITAR<span>ZERO</span> TO BANDROCK</div>
+  <div class="nav-links">
+    <a href="#equipo">Equipo</a>
+    <a href="#cascada">Distribución</a>
+    <a href="#acciones">Acciones</a>
+    <a href="#progreso">Progreso</a>
+  </div>
+  <div class="nav-count" id="navCount">0%</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Panel Interno de Co-Fundadores</div>
+  <h1>Guitar<span class="red">Zero</span> to <span class="gold">BandRock</span></h1>
+  <p class="hero-sub">Plataforma EdTech musical bilingüe · Método BandLoop™ · JackTrip &lt;25ms · SaaS Bootstrap</p>
+  <div class="countdown-box">
+    <div class="count-item">
+      <div class="count-num" id="cDays">--</div>
+      <div class="count-lbl">Días</div>
+    </div>
+    <div class="count-sep">:</div>
+    <div class="count-item">
+      <div class="count-num" id="cHours">--</div>
+      <div class="count-lbl">Horas</div>
+    </div>
+    <div class="count-sep">:</div>
+    <div class="count-item">
+      <div class="count-num" id="cMins">--</div>
+      <div class="count-lbl">Min</div>
+    </div>
+    <div class="count-sep">:</div>
+    <div class="count-item">
+      <div class="count-num" id="cSecs">--</div>
+      <div class="count-lbl">Seg</div>
+    </div>
+  </div>
+  <div class="hero-launch">🚀 Lanzamiento oficial: 31 de Mayo, 2026</div>
+</div>
+
+<!-- RESUMEN -->
+<section>
+  <div class="section-title"><span class="dot"></span>Resumen del Proyecto</div>
+  <div class="section-sub">Estado general · Modelo de negocio · Tecnología diferenciadora</div>
+  <div class="metrics">
+    <div class="metric-card" style="--accent: var(--red)">
+      <div class="metric-icon">🎸</div>
+      <div class="metric-value">5</div>
+      <div class="metric-label">Tiers de Membresía</div>
+      <div class="metric-sub">$14 · $25 · $99 · $149 · $249/mes</div>
+    </div>
+    <div class="metric-card" style="--accent: var(--teal)">
+      <div class="metric-icon">⚡</div>
+      <div class="metric-value">&lt;25ms</div>
+      <div class="metric-label">Latencia JackTrip</div>
+      <div class="metric-sub">Diferenciador central · todos los tiers</div>
+    </div>
+    <div class="metric-card" style="--accent: var(--gold)">
+      <div class="metric-icon">💰</div>
+      <div class="metric-value">$0</div>
+      <div class="metric-label">Inversión Inicial</div>
+      <div class="metric-sub">100% Bootstrap · Sin capital externo</div>
+    </div>
+    <div class="metric-card" style="--accent: var(--green)">
+      <div class="metric-icon">📅</div>
+      <div class="metric-value">May 31</div>
+      <div class="metric-label">Fecha de Lanzamiento</div>
+      <div class="metric-sub">Plataforma Skool · 2026</div>
+    </div>
+    <div class="metric-card" style="--accent: var(--blue)">
+      <div class="metric-icon">🏛</div>
+      <div class="metric-value">LLC</div>
+      <div class="metric-label">LLC Delaware · En proceso</div>
+      <div class="metric-sub">Meta: $600 USD en 6 semanas</div>
+    </div>
+    <div class="metric-card" style="--accent: var(--purple)">
+      <div class="metric-icon">🎓</div>
+      <div class="metric-value">Skool</div>
+      <div class="metric-label">Plataforma de Academia</div>
+      <div class="metric-sub">Stripe · Zapier · WhatsApp Business</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- EQUIPO -->
+<section id="equipo">
+  <div class="section-title"><span class="dot"></span>El Equipo</div>
+  <div class="section-sub">Haz clic en tu tarjeta para ir directo a tus tareas asignadas</div>
+  <div class="team-grid">
+
+    <!-- JLV -->
+    <div class="team-card" onclick="goToTab('tab-jlv')">
+      <div class="team-header">
+        <div class="avatar" style="background: rgba(230,57,70,.2); color: var(--red); border-color: var(--red);">JLV</div>
+        <div>
+          <div class="team-name">José Luis Valenzuela</div>
+          <div class="team-role">CEO & Co-Fundador</div>
+        </div>
+      </div>
+      <div class="team-badges">
+        <span class="badge badge-founder">Co-Fundador</span>
+        <span class="badge badge-firmado">Activo</span>
+      </div>
+      <div class="team-dist">Distribución: <span>8% Rol CEO</span> + <span>20% Utilidad</span></div>
+      <div class="team-dist" style="margin-top:4px">Equity: <span>50%</span></div>
+      <button class="view-btn" onclick="event.stopPropagation(); goToTab('tab-jlv')">Ver mis tareas →</button>
+    </div>
+
+    <!-- JAVIER Dir. Artístico -->
+    <div class="team-card" onclick="goToTab('tab-javier')">
+      <div class="team-header">
+        <div class="avatar" style="background: rgba(244,162,97,.2); color: var(--gold); border-color: var(--gold);">FJ</div>
+        <div>
+          <div class="team-name">Francisco Javier<br>Galindo Manzo</div>
+          <div class="team-role">Director Artístico & Co-Fundador</div>
+        </div>
+      </div>
+      <div class="team-badges">
+        <span class="badge badge-founder">Co-Fundador</span>
+        <span class="badge badge-firmado">ICA Firmado</span>
+      </div>
+      <div class="team-dist">Distribución: <span>8% Rol Dir.Art</span> + <span>20% Utilidad</span></div>
+      <div class="team-dist" style="margin-top:4px">Equity: <span>50%</span></div>
+      <button class="view-btn" onclick="event.stopPropagation(); goToTab('tab-javier')">Ver mis tareas →</button>
+    </div>
+
+    <!-- ZAMORA TORRES -->
+    <div class="team-card" onclick="goToTab('tab-ignacio')">
+      <div class="team-header">
+        <div class="avatar" style="background: rgba(72,149,239,.2); color: var(--blue); border-color: var(--blue);">IZT</div>
+        <div>
+          <div class="team-name">Ignacio Zamora Torres</div>
+          <div class="team-role">Instructor Certificado (ICA)</div>
+        </div>
+      </div>
+      <div class="team-badges">
+        <span class="badge badge-ica">ICA</span>
+        <span class="badge badge-firmado">Firmado</span>
+      </div>
+      <div class="team-dist">Distribución ICA: <span>15% base + 5% bono</span></div>
+      <div class="team-dist" style="margin-top:4px">Del pool: <span>20% ICAs colectivo</span></div>
+      <button class="view-btn" onclick="event.stopPropagation(); goToTab('tab-ignacio')">Ver mis tareas →</button>
+    </div>
+
+    <!-- JAVIER PERES -->
+    <div class="team-card" onclick="goToTab('tab-jperes')">
+      <div class="team-header">
+        <div class="avatar" style="background: rgba(255,183,3,.15); color: var(--yellow); border-color: var(--yellow);">JP</div>
+        <div>
+          <div class="team-name">Javier Peres</div>
+          <div class="team-role">Instructor Certificado (ICA) · Pendiente</div>
+        </div>
+      </div>
+      <div class="team-badges">
+        <span class="badge badge-ica">ICA</span>
+        <span class="badge badge-pendiente">Pendiente Firma</span>
+      </div>
+      <div class="team-dist">Distribución ICA: <span>15% base + 5% bono</span></div>
+      <div class="interim-note"><strong>⚡ Interino: JLV</strong> asume este rol hasta formalización</div>
+      <button class="view-btn" onclick="event.stopPropagation(); goToTab('tab-jperes')">Ver tareas →</button>
+    </div>
+
+    <!-- PERLA VILLEGAS -->
+    <div class="team-card" onclick="goToTab('tab-perla')">
+      <div class="team-header">
+        <div class="avatar" style="background: rgba(123,45,139,.2); color: #c084fc; border-color: #c084fc;">PV</div>
+        <div>
+          <div class="team-name">Perla Elizenda<br>Villegas Mancil</div>
+          <div class="team-role">Instructora Certificada (ICA) · Pendiente</div>
+        </div>
+      </div>
+      <div class="team-badges">
+        <span class="badge badge-ica">ICA</span>
+        <span class="badge badge-pendiente">Pendiente NDA + ICA</span>
+      </div>
+      <div class="team-dist">Distribución ICA: <span>15% base + 5% bono</span></div>
+      <div class="interim-note"><strong>⚡ Interino: JLV</strong> asume este rol hasta formalización</div>
+      <button class="view-btn" onclick="event.stopPropagation(); goToTab('tab-perla')">Ver tareas →</button>
+    </div>
+
+    <!-- CAROLINA GARCIA -->
+    <div class="team-card" onclick="goToTab('tab-carolina')">
+      <div class="team-header">
+        <div class="avatar" style="background: rgba(42,157,143,.2); color: var(--teal); border-color: var(--teal);">CG</div>
+        <div>
+          <div class="team-name">Carolina García</div>
+          <div class="team-role">Instructora Certificada (ICA) · Pendiente</div>
+        </div>
+      </div>
+      <div class="team-badges">
+        <span class="badge badge-ica">ICA</span>
+        <span class="badge badge-pendiente">Pendiente NDA + ICA</span>
+      </div>
+      <div class="team-dist">Distribución ICA: <span>15% base + 5% bono</span></div>
+      <div class="interim-note"><strong>⚡ Interino: JLV</strong> asume este rol hasta formalización</div>
+      <button class="view-btn" onclick="event.stopPropagation(); goToTab('tab-carolina')">Ver tareas →</button>
+    </div>
+
+    <!-- IT LEAD -->
+    <div class="team-card">
+      <div class="team-header">
+        <div class="avatar" style="background: rgba(136,136,136,.15); color: var(--muted); border-color: var(--muted);">IT</div>
+        <div>
+          <div class="team-name">Director de Tecnología</div>
+          <div class="team-role">IT Lead · Posición Abierta</div>
+        </div>
+      </div>
+      <div class="team-badges">
+        <span class="badge badge-buscando">🔍 Buscando</span>
+      </div>
+      <div class="team-dist">Responsabilidad: <span>Stack técnico, Stripe, Zapier, JackTrip</span></div>
+      <div class="interim-note"><strong>⚡ Interino: JLV</strong> maneja aspectos técnicos mientras se contrata</div>
+    </div>
+
+    <!-- CONTENIDO LEAD -->
+    <div class="team-card">
+      <div class="team-header">
+        <div class="avatar" style="background: rgba(136,136,136,.15); color: var(--muted); border-color: var(--muted);">DC</div>
+        <div>
+          <div class="team-name">Director de Contenido</div>
+          <div class="team-role">Content Lead · Posición Abierta</div>
+        </div>
+      </div>
+      <div class="team-badges">
+        <span class="badge badge-buscando">🔍 Buscando</span>
+      </div>
+      <div class="team-dist">Responsabilidad: <span>Calendario editorial, redes, producción video</span></div>
+      <div class="interim-note"><strong>⚡ Interino: JLV</strong> maneja contenido y redes sociales</div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CASCADA DISTRIBUCIÓN -->
+<section id="cascada">
+  <div class="section-title"><span class="dot"></span>Cascada de Distribución</div>
+  <div class="section-sub">Distribución INVIOLABLE — suma exacta 100% · No modificar sin consenso de co-fundadores</div>
+  <div class="cascada-container">
+    <div class="cascada-title">Distribución por capa (% sobre ingresos totales)</div>
+
+    <div class="cascada-bar-wrap">
+      <div class="cascada-label"><span class="name">🎸 ICAs — Pool Instructores</span><span class="pct">20%</span></div>
+      <div class="cascada-bar"><div class="cascada-fill" style="width:20%; background: var(--blue);"></div></div>
+    </div>
+    <div class="cascada-bar-wrap">
+      <div class="cascada-label"><span class="name">👔 Directores Externos</span><span class="pct">9%</span></div>
+      <div class="cascada-bar"><div class="cascada-fill" style="width:9%; background: var(--purple);"></div></div>
+    </div>
+    <div class="cascada-bar-wrap">
+      <div class="cascada-label"><span class="name">⚙️ Operaciones</span><span class="pct">10%</span></div>
+      <div class="cascada-bar"><div class="cascada-fill" style="width:10%; background: var(--teal);"></div></div>
+    </div>
+    <div class="cascada-bar-wrap">
+      <div class="cascada-label"><span class="name">🏦 Reserva / Fondo Emergencia</span><span class="pct">5%</span></div>
+      <div class="cascada-bar"><div class="cascada-fill" style="width:5%; background: var(--muted);"></div></div>
+    </div>
+    <div class="cascada-bar-wrap">
+      <div class="cascada-label"><span class="name">👤 Rol CEO (José Luis)</span><span class="pct">8%</span></div>
+      <div class="cascada-bar"><div class="cascada-fill" style="width:8%; background: var(--red);"></div></div>
+    </div>
+    <div class="cascada-bar-wrap">
+      <div class="cascada-label"><span class="name">🎨 Rol Director Artístico (Javier)</span><span class="pct">8%</span></div>
+      <div class="cascada-bar"><div class="cascada-fill" style="width:8%; background: var(--gold);"></div></div>
+    </div>
+    <div class="cascada-bar-wrap">
+      <div class="cascada-label"><span class="name">💎 Utilidad — 50% JLV / 50% Javier</span><span class="pct">40%</span></div>
+      <div class="cascada-bar"><div class="cascada-fill" style="width:40%; background: var(--green);"></div></div>
+    </div>
+
+    <div class="cascada-total">
+      <span>TOTAL</span><span style="color:var(--green)">100% ✓</span>
+    </div>
+    <div class="cascada-note">⚠️ Esta cascada es INVIOLABLE. Cualquier ajuste de porcentaje debe evaluarse en todas las capas para mantener la suma en 100%.</div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ACCIONES -->
+<section id="acciones">
+  <div class="section-title"><span class="dot"></span>Acciones por Persona y Área</div>
+  <div class="section-sub">Marca cada tarea al completarla — el progreso se guarda automáticamente en tu navegador</div>
+
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchTab('tab-hoy')">🔥 HOY (31 Mar)</button>
+    <button class="tab-btn" onclick="switchTab('tab-jlv')">José Luis</button>
+    <button class="tab-btn" onclick="switchTab('tab-javier')">Javier (Dir.Art)</button>
+    <button class="tab-btn" onclick="switchTab('tab-ignacio')">Ignacio</button>
+    <button class="tab-btn" onclick="switchTab('tab-jperes')">Javier Peres</button>
+    <button class="tab-btn" onclick="switchTab('tab-perla')">Perla</button>
+    <button class="tab-btn" onclick="switchTab('tab-carolina')">Carolina</button>
+    <button class="tab-btn" onclick="switchTab('tab-llc')">🏛 LLC</button>
+    <button class="tab-btn" onclick="switchTab('tab-plataforma')">⚙️ Plataforma</button>
+    <button class="tab-btn" onclick="switchTab('tab-contenido')">🎬 Contenido</button>
+    <button class="tab-btn" onclick="switchTab('tab-lanzamiento')">🚀 Lanzamiento</button>
+  </div>
+
+  <!-- HOY -->
+  <div class="tab-panel active" id="tab-hoy">
+    <div class="task-group">
+      <div class="task-group-title">🔥 Acciones Críticas — HOY 31 Marzo</div>
+      <div id="tasks-hoy">
+        <!-- tasks injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JLV -->
+  <div class="tab-panel" id="tab-jlv">
+    <div class="task-group">
+      <div class="task-group-title">Esta semana (31 Mar – 6 Abr)</div>
+      <div id="tasks-jlv-s1"></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Semana 2 (7 – 13 Abr)</div>
+      <div id="tasks-jlv-s2"></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Semanas 3–6 (14 Abr – 11 May)</div>
+      <div id="tasks-jlv-s3"></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Lanzamiento (12 – 31 May)</div>
+      <div id="tasks-jlv-launch"></div>
+    </div>
+  </div>
+
+  <!-- JAVIER DIR ARTÍSTICO -->
+  <div class="tab-panel" id="tab-javier">
+    <div class="task-group">
+      <div class="task-group-title">Abril — Grabaciones y Curriculum</div>
+      <div id="tasks-javier-apr"></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Mayo — Pre-lanzamiento</div>
+      <div id="tasks-javier-may"></div>
+    </div>
+  </div>
+
+  <!-- IGNACIO -->
+  <div class="tab-panel" id="tab-ignacio">
+    <div class="task-group">
+      <div class="task-group-title">Onboarding ICA — Abril</div>
+      <div id="tasks-ignacio"></div>
+    </div>
+  </div>
+
+  <!-- JAVIER PERES -->
+  <div class="tab-panel" id="tab-jperes">
+    <div style="background: rgba(255,183,3,.08); border: 1px solid rgba(255,183,3,.2); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+      <strong style="color:var(--yellow)">⏳ Estado: Pendiente de firma</strong><br>
+      <span style="color:var(--muted); font-size:13px">JLV asume este rol hasta que Javier Peres firme el ICA y complete el onboarding.</span>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Documentación pendiente</div>
+      <div id="tasks-jperes"></div>
+    </div>
+  </div>
+
+  <!-- PERLA -->
+  <div class="tab-panel" id="tab-perla">
+    <div style="background: rgba(255,183,3,.08); border: 1px solid rgba(255,183,3,.2); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+      <strong style="color:var(--yellow)">⏳ Estado: Pendiente de NDA + ICA</strong><br>
+      <span style="color:var(--muted); font-size:13px">JLV asume este rol hasta que Perla Villegas firme NDA + ICA y complete el onboarding.</span>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Documentación pendiente</div>
+      <div id="tasks-perla"></div>
+    </div>
+  </div>
+
+  <!-- CAROLINA -->
+  <div class="tab-panel" id="tab-carolina">
+    <div style="background: rgba(255,183,3,.08); border: 1px solid rgba(255,183,3,.2); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+      <strong style="color:var(--yellow)">⏳ Estado: Pendiente de NDA + ICA</strong><br>
+      <span style="color:var(--muted); font-size:13px">JLV asume este rol hasta que Carolina García firme NDA + ICA y complete el onboarding.</span>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Documentación pendiente</div>
+      <div id="tasks-carolina"></div>
+    </div>
+  </div>
+
+  <!-- LLC -->
+  <div class="tab-panel" id="tab-llc">
+    <div style="background: rgba(230,57,70,.08); border: 1px solid rgba(230,57,70,.2); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+      <strong style="color:var(--red)">🏛 Prioridad Financiera #1</strong><br>
+      <span style="color:var(--muted); font-size:13px">La LLC Delaware es necesaria para activar Stripe Connect Express y pagar ICAs automáticamente. Meta: $600 USD en 6 semanas vía primeras ventas Skool.</span>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Fase 1 — Fondeo (Semanas 1-6)</div>
+      <div id="tasks-llc-f1"></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Fase 2 — Constitución (Semana 6-7)</div>
+      <div id="tasks-llc-f2"></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Fase 3 — Activación financiera (Semana 7-8)</div>
+      <div id="tasks-llc-f3"></div>
+    </div>
+  </div>
+
+  <!-- PLATAFORMA -->
+  <div class="tab-panel" id="tab-plataforma">
+    <div class="task-group">
+      <div class="task-group-title">WhatsApp Business (HOY)</div>
+      <div id="tasks-wa"></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Stripe + Zapier (Esta semana)</div>
+      <div id="tasks-stripe"></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Skool (Semanas 2-4)</div>
+      <div id="tasks-skool"></div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO -->
+  <div class="tab-panel" id="tab-contenido">
+    <div class="task-group">
+      <div class="task-group-title">Semana 1 — Primera publicación (31 Mar – 6 Abr)</div>
+      <div id="tasks-cont-s1"></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Sesión de Filmación #1 (7 Abr — Casa Javier)</div>
+      <div id="tasks-film1"></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Sesiones #2–#6 (Abr – May)</div>
+      <div id="tasks-film2"></div>
+    </div>
+  </div>
+
+  <!-- LANZAMIENTO -->
+  <div class="tab-panel" id="tab-lanzamiento">
+    <div class="task-group">
+      <div class="task-group-title">Gate 0→1 · Checkpoint 1 Mayo</div>
+      <div id="tasks-launch-gate"></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Pre-lanzamiento (1–30 Mayo)</div>
+      <div id="tasks-launch-pre"></div>
+    </div>
+    <div class="task-group">
+      <div class="task-group-title">Día de Lanzamiento — 31 Mayo 2026</div>
+      <div id="tasks-launch-day"></div>
+    </div>
+  </div>
+
+</section>
+
+<hr class="divider">
+
+<!-- PROGRESO -->
+<section id="progreso">
+  <div class="section-title"><span class="dot"></span>Semáforo de Avance</div>
+  <div class="section-sub">Progreso calculado automáticamente según tareas completadas</div>
+  <div class="progress-grid" id="progressGrid">
+    <!-- injected by JS -->
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- EXPORT -->
+<div class="export-section">
+  <div class="section-title" style="justify-content:center; margin-bottom:8px"><span class="dot"></span>Exportar Progreso</div>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:20px">Genera un resumen para compartir en el grupo de WhatsApp del equipo</p>
+  <button class="export-btn whatsapp" onclick="exportStatus()">📲 Copiar resumen para WhatsApp</button>
+  <button class="export-btn reset-btn" onclick="confirmReset()">🔄 Reiniciar mi progreso</button>
+  <div class="export-output" id="exportOut"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>GuitarZero to BandRock</strong> · Panel Co-Fundadores V1 · 31 Mar 2026<br>
+  <span style="font-size:11px">Método BandLoop™ · Tecnología JackTrip · Plataforma Skool · 100% Bootstrap</span>
+</footer>
+
+<script>
+// =====================
+// DATA: ALL TASKS
+// =====================
+const TASKS = {
+  'hoy': [
+    { id:'h1', text:'Configurar WhatsApp Business: perfil, horario, foto, descripción', date:'HOY · 31 Mar', owner:'JLV', priority:'high', ref:'Checklist_WhatsApp_Business.docx' },
+    { id:'h2', text:'Activar mensajes automáticos de bienvenida y ausencia en WA Business', date:'HOY · 31 Mar', owner:'JLV', priority:'high', ref:'GZBR_Scripts_WhatsApp_V1.docx' },
+    { id:'h3', text:'Crear catálogo de 5 tiers en WA Business ($14/$25/$99/$149/$249)', date:'HOY · 31 Mar', owner:'JLV', priority:'high', ref:'Plan_Negocios_V8.3' },
+    { id:'h4', text:'Configurar 7 etiquetas de gestión en WA Business', date:'HOY · 31 Mar', owner:'JLV', priority:'high' },
+    { id:'h5', text:'Verificar que los 5 Stripe Payment Links estén activos', date:'HOY · 31 Mar', owner:'JLV', priority:'high', ref:'Integración_herramientas_financieras.docx' },
+    { id:'h6', text:'Verificar Zapier: Zap bienvenida (Stripe→Skool→WA) activo', date:'HOY · 31 Mar', owner:'JLV', priority:'high' },
+    { id:'h7', text:'Verificar Zapier: Zap retención (inactivo 7 días→WA) activo', date:'HOY · 31 Mar', owner:'JLV', priority:'high' },
+    { id:'h8', text:'Agregar link de WhatsApp Business a todos los bios de redes sociales', date:'HOY · 31 Mar', owner:'JLV', priority:'high' },
+    { id:'h9', text:'Enviar ICA (GZ_ICA_Universal_V4.docx) a Francisco Javier Galindo Manzo', date:'HOY · 31 Mar', owner:'JLV', priority:'high', ref:'GZ_ICA_Universal_V4.docx' },
+    { id:'h10', text:'Enviar ICA (GZ_ICA_Universal_V4.docx) a Ignacio Zamora Torres', date:'HOY · 31 Mar', owner:'JLV', priority:'high', ref:'GZ_ICA_Universal_V4.docx' },
+  ],
+  'jlv-s1': [
+    { id:'jlv1', text:'Configurar respuestas rápidas en WA: /basico /avanzado /premium /pro /industria /bandloop', date:'31 Mar', owner:'JLV', priority:'high' },
+    { id:'jlv2', text:'Publicar oferta de trabajo: IT Lead / Director Tecnología', date:'1 Abr', owner:'JLV', priority:'mid' },
+    { id:'jlv3', text:'Publicar oferta de trabajo: Director de Contenido', date:'1 Abr', owner:'JLV', priority:'mid' },
+    { id:'jlv4', text:'Enviar NDA + ICA a Perla Elizenda Villegas Mancil', date:'1 Abr', owner:'JLV', priority:'high', ref:'GZ_ICA_Universal_V4.docx' },
+    { id:'jlv5', text:'Enviar NDA + ICA a Carolina García', date:'1 Abr', owner:'JLV', priority:'high', ref:'GZ_ICA_Universal_V4.docx' },
+    { id:'jlv6', text:'Enviar documentos de formalización a Javier Peres', date:'2 Abr', owner:'JLV', priority:'mid' },
+    { id:'jlv7', text:'Publicar primer post en redes → CTA a WhatsApp (IC2: bloqueado tecnológicamente)', date:'1 Abr', owner:'JLV', priority:'high', ref:'Calendario_Contenido_S1.xlsx' },
+    { id:'jlv8', text:'Publicar contenido día 2: Reels Instagram · IC1 (soledad musical)', date:'2 Abr', owner:'JLV' },
+    { id:'jlv9', text:'Publicar contenido día 3: TikTok · Hook BandLoop™', date:'3 Abr', owner:'JLV' },
+    { id:'jlv10', text:'Publicar contenido día 4: YouTube Shorts · JackTrip demo', date:'4 Abr', owner:'JLV' },
+    { id:'jlv11', text:'Primer revisión semanal: KPIs WhatsApp (aberturas, respuestas, conversiones)', date:'6 Abr', owner:'JLV', ref:'Calendario_KPIs.xlsx' },
+  ],
+  'jlv-s2': [
+    { id:'jlv12', text:'Sesión de filmación #1 en Casa Javier (equipos: Note 10+, mini tripod, LED, mic USB-C)', date:'7 Abr', owner:'JLV + Javier', priority:'high', ref:'Biblia_Produccion_Visual_V1.docx' },
+    { id:'jlv13', text:'Onboarding Galindo Manzo: protocolo de bienvenida ICA', date:'8 Abr', owner:'JLV', ref:'Manual_Operaciones_V8.3.docx' },
+    { id:'jlv14', text:'Onboarding Zamora Torres: protocolo de bienvenida ICA', date:'8 Abr', owner:'JLV', ref:'Manual_Operaciones_V8.3.docx' },
+    { id:'jlv15', text:'Editar y publicar videos de sesión #1 (mínimo 3 piezas de contenido)', date:'9-10 Abr', owner:'JLV' },
+    { id:'jlv16', text:'Revisar y responder prospectos WhatsApp del seguimiento D+7', date:'7 Abr', owner:'JLV', ref:'Scripts_WhatsApp_V1.docx' },
+    { id:'jlv17', text:'Sesión filmación #2 (locación: sala casa JLV — luz foco + ventana)', date:'14 Abr', owner:'JLV', ref:'Biblia_Produccion_Visual_V1.docx' },
+  ],
+  'jlv-s3': [
+    { id:'jlv18', text:'Acumular $100–150 primeras ventas → fondo LLC Delaware', date:'Sem 2-3', owner:'JLV', priority:'high' },
+    { id:'jlv19', text:'Sesión filmación #3 (La Maquila — escenario en vivo)', date:'21 Abr', owner:'JLV + Javier', ref:'Biblia_Produccion_Visual_V1.docx' },
+    { id:'jlv20', text:'Sesión filmación #4 (República Malta — escenario en vivo)', date:'28 Abr', owner:'JLV + Javier' },
+    { id:'jlv21', text:'Onboarding Javier Peres (cuando firme)', date:'Abr-May', owner:'JLV' },
+    { id:'jlv22', text:'Onboarding Perla Villegas (cuando firme)', date:'Abr-May', owner:'JLV' },
+    { id:'jlv23', text:'Onboarding Carolina García (cuando firme)', date:'Abr-May', owner:'JLV' },
+    { id:'jlv24', text:'Alcanzar $600 acumulados → iniciar proceso LLC vía Stripe Atlas', date:'11 May', owner:'JLV', priority:'high' },
+    { id:'jlv25', text:'Checkpoint Gate 0→1: mínimo 5 alumnos pagos en Skool', date:'1 May', owner:'JLV', priority:'high' },
+  ],
+  'jlv-launch': [
+    { id:'jlv26', text:'Abrir LLC Delaware vía Stripe Atlas ($500)', date:'12 May', owner:'JLV', priority:'high' },
+    { id:'jlv27', text:'Configurar Stripe Connect Express para dispersión automática a ICAs', date:'15 May', owner:'JLV', priority:'high' },
+    { id:'jlv28', text:'Abrir cuenta Mercury Bank (cuenta empresarial USD)', date:'16 May', owner:'JLV' },
+    { id:'jlv29', text:'Configurar Wise Business (conversión USD→MXN)', date:'17 May', owner:'JLV' },
+    { id:'jlv30', text:'Campaña de lanzamiento — WhatsApp blast a lista de prospectos', date:'29 May', owner:'JLV', priority:'high', ref:'Estrategia_WhatsApp_V1.docx' },
+    { id:'jlv31', text:'🚀 LANZAMIENTO OFICIAL en Skool — 31 Mayo 2026', date:'31 May', owner:'JLV + Equipo', priority:'high' },
+  ],
+  'javier-apr': [
+    { id:'jav1', text:'Confirmar disponibilidad y preparar casa para sesión filmación #1 (7 Abr)', date:'3 Abr', owner:'Javier', priority:'high', ref:'Biblia_Produccion_Visual_V1.docx' },
+    { id:'jav2', text:'Revisión del curriculum musical BandLoop™ Nivel 1 (Básico-Avanzado)', date:'7 Abr', owner:'Javier', priority:'high' },
+    { id:'jav3', text:'Sesión de filmación #1: Demos de guitarra, intro BandLoop™', date:'7 Abr', owner:'Javier + JLV', ref:'Biblia_Produccion_Visual_V1.docx' },
+    { id:'jav4', text:'Sesión filmación #3 en La Maquila — concierto/escenario', date:'21 Abr', owner:'Javier + JLV' },
+    { id:'jav5', text:'Sesión filmación #4 en República Malta', date:'28 Abr', owner:'Javier + JLV' },
+    { id:'jav6', text:'Definir temario y estructura de clases Premium y Pro', date:'15 Abr', owner:'Javier' },
+    { id:'jav7', text:'Revisar y validar guías de onboarding para alumnos nuevos', date:'20 Abr', owner:'Javier', ref:'Manual_Operaciones_V8.3.docx' },
+  ],
+  'javier-may': [
+    { id:'jav8', text:'Sesión filmación #5 (Casa Javier — avanzado)', date:'5 May', owner:'Javier + JLV' },
+    { id:'jav9', text:'Sesión filmación #6 (final — highlight reel lanzamiento)', date:'19 May', owner:'Javier + JLV' },
+    { id:'jav10', text:'Aprobar video de lanzamiento oficial antes de publicar', date:'28 May', owner:'Javier', priority:'high' },
+    { id:'jav11', text:'Presencia en vivo en el lanzamiento (30 May o 31 May, a confirmar formato)', date:'31 May', owner:'Javier', priority:'high' },
+  ],
+  'ignacio': [
+    { id:'ign1', text:'Firmar ICA GZ_ICA_Universal_V4.docx y devolver firmado a JLV', date:'2 Abr', owner:'Ignacio', priority:'high', ref:'GZ_ICA_Universal_V4.docx' },
+    { id:'ign2', text:'Enviar horarios de disponibilidad semanal (días y horas libres)', date:'3 Abr', owner:'Ignacio' },
+    { id:'ign3', text:'Asistir a sesión de onboarding ICA con JLV (protocolo GZBR)', date:'8 Abr', owner:'Ignacio', ref:'Manual_Operaciones_V8.3.docx' },
+    { id:'ign4', text:'Instalar y probar JackTrip (<25ms) en tu equipo', date:'10 Abr', owner:'Ignacio', priority:'high' },
+    { id:'ign5', text:'Primera sesión de prueba con alumno real (bajo supervisión JLV)', date:'15 Abr', owner:'Ignacio' },
+    { id:'ign6', text:'Confirmar cuenta bancaria o Wise para dispersión de pagos', date:'12 Abr', owner:'Ignacio' },
+    { id:'ign7', text:'Revisar y confirmar acuerdo de distribución: 15% base + 5% bono = 20%', date:'8 Abr', owner:'Ignacio' },
+  ],
+  'jperes': [
+    { id:'jp1', text:'Revisar y firmar ICA GZ_ICA_Universal_V4.docx enviado por JLV', date:'Por confirmar', owner:'Javier Peres', priority:'high' },
+    { id:'jp2', text:'Enviar horarios de disponibilidad semanal', date:'Al firmar', owner:'Javier Peres' },
+    { id:'jp3', text:'Sesión de onboarding ICA con JLV (protocolo GZBR)', date:'Al firmar + 3 días', owner:'Javier Peres' },
+    { id:'jp4', text:'Instalar y probar JackTrip en tu equipo', date:'Al firmar + 5 días', owner:'Javier Peres' },
+    { id:'jp5', text:'Confirmar cuenta bancaria / Wise para dispersión de pagos', date:'Al firmar', owner:'Javier Peres' },
+  ],
+  'perla': [
+    { id:'pe1', text:'Revisar y firmar NDA enviado por JLV', date:'Por confirmar', owner:'Perla Villegas', priority:'high' },
+    { id:'pe2', text:'Revisar y firmar ICA GZ_ICA_Universal_V4.docx', date:'Después del NDA', owner:'Perla Villegas', priority:'high' },
+    { id:'pe3', text:'Enviar horarios de disponibilidad semanal', date:'Al firmar', owner:'Perla Villegas' },
+    { id:'pe4', text:'Sesión de onboarding ICA con JLV', date:'Al firmar + 3 días', owner:'Perla Villegas' },
+    { id:'pe5', text:'Instalar y probar JackTrip en tu equipo', date:'Al firmar + 5 días', owner:'Perla Villegas' },
+    { id:'pe6', text:'Confirmar cuenta bancaria / Wise para dispersión de pagos', date:'Al firmar', owner:'Perla Villegas' },
+  ],
+  'carolina': [
+    { id:'ca1', text:'Revisar y firmar NDA enviado por JLV', date:'Por confirmar', owner:'Carolina García', priority:'high' },
+    { id:'ca2', text:'Revisar y firmar ICA GZ_ICA_Universal_V4.docx', date:'Después del NDA', owner:'Carolina García', priority:'high' },
+    { id:'ca3', text:'Enviar horarios de disponibilidad semanal', date:'Al firmar', owner:'Carolina García' },
+    { id:'ca4', text:'Sesión de onboarding ICA con JLV', date:'Al firmar + 3 días', owner:'Carolina García' },
+    { id:'ca5', text:'Instalar y probar JackTrip en tu equipo', date:'Al firmar + 5 días', owner:'Carolina García' },
+    { id:'ca6', text:'Confirmar cuenta bancaria / Wise para dispersión de pagos', date:'Al firmar', owner:'Carolina García' },
+  ],
+  'llc-f1': [
+    { id:'llc1', text:'Activar primeras ventas en Skool para acumular fondos', date:'1 Abr', owner:'JLV', priority:'high' },
+    { id:'llc2', text:'Meta semana 1: $50–100 USD (4-7 alumnos BÁSICO)', date:'7 Abr', owner:'JLV' },
+    { id:'llc3', text:'Meta semana 2: $100–200 USD acumulados', date:'14 Abr', owner:'JLV' },
+    { id:'llc4', text:'Meta semana 3-4: $300–400 USD acumulados', date:'28 Abr', owner:'JLV' },
+    { id:'llc5', text:'Meta semana 5-6: $600 USD — FONDOS LISTOS para LLC', date:'11 May', owner:'JLV', priority:'high' },
+  ],
+  'llc-f2': [
+    { id:'llc6', text:'Iniciar proceso LLC Delaware vía Stripe Atlas ($500 + impuestos)', date:'12 May', owner:'JLV', priority:'high' },
+    { id:'llc7', text:'Completar formularios de constitución (nombre oficial: GZBR LLC)', date:'13 May', owner:'JLV' },
+    { id:'llc8', text:'Obtener EIN (Employer Identification Number) del IRS', date:'14-16 May', owner:'JLV', priority:'high' },
+    { id:'llc9', text:'Abrir cuenta Mercury Bank con EIN + documentos LLC', date:'17 May', owner:'JLV' },
+  ],
+  'llc-f3': [
+    { id:'llc10', text:'Configurar Wise Business (USD→MXN) para co-fundadores MX', date:'18 May', owner:'JLV' },
+    { id:'llc11', text:'Activar Stripe Connect Express (requiere LLC + EIN + Mercury)', date:'19 May', owner:'JLV', priority:'high' },
+    { id:'llc12', text:'Configurar dispersión automática: 20% pool ICAs via Connect Express', date:'20 May', owner:'JLV' },
+    { id:'llc13', text:'Prueba de pago real: 1 alumno → dispersión automática al primer ICA', date:'22 May', owner:'JLV', priority:'high' },
+    { id:'llc14', text:'Validar cascada completa en ambiente real antes de lanzamiento', date:'25 May', owner:'JLV', priority:'high' },
+  ],
+  'wa': [
+    { id:'wa1', text:'Descargar WhatsApp Business (si no está instalada)', date:'HOY', owner:'JLV', priority:'high' },
+    { id:'wa2', text:'Configurar perfil: nombre "GuitarZero to BandRock", foto logo, descripción', date:'HOY', owner:'JLV', priority:'high' },
+    { id:'wa3', text:'Configurar horario de atención (9am–9pm, zona Tijuana)', date:'HOY', owner:'JLV', priority:'high' },
+    { id:'wa4', text:'Activar mensaje de bienvenida automático', date:'HOY', owner:'JLV', priority:'high' },
+    { id:'wa5', text:'Activar mensaje de ausencia automático', date:'HOY', owner:'JLV', priority:'high' },
+    { id:'wa6', text:'Crear catálogo: 5 tiers (Básico $14, Avanzado $25, Premium $99, Pro $149, Industria $249)', date:'HOY', owner:'JLV', priority:'high' },
+    { id:'wa7', text:'Crear 7 etiquetas de gestión: Nuevo Lead / Interesado / Seguimiento / Listo para Pagar / Alumno Activo / En Riesgo / Referido', date:'HOY', owner:'JLV' },
+    { id:'wa8', text:'Configurar 6 respuestas rápidas (/basico /avanzado /premium /pro /industria /bandloop)', date:'HOY', owner:'JLV' },
+    { id:'wa9', text:'Agregar link WA a Instagram bio, TikTok bio, YouTube descripción', date:'HOY', owner:'JLV' },
+  ],
+  'stripe': [
+    { id:'str1', text:'Verificar Payment Link Básico $14/mes — test de compra', date:'31 Mar', owner:'JLV', priority:'high' },
+    { id:'str2', text:'Verificar Payment Link Avanzado $25/mes', date:'31 Mar', owner:'JLV', priority:'high' },
+    { id:'str3', text:'Verificar Payment Link Premium $99/mes', date:'31 Mar', owner:'JLV', priority:'high' },
+    { id:'str4', text:'Verificar Payment Link Pro $149/mes', date:'31 Mar', owner:'JLV', priority:'high' },
+    { id:'str5', text:'Verificar Payment Link Industria $249/mes', date:'31 Mar', owner:'JLV', priority:'high' },
+    { id:'str6', text:'Verificar Zap: Stripe → Invitación Skool automática', date:'1 Abr', owner:'JLV' },
+    { id:'str7', text:'Verificar Zap: Stripe → Mensaje WA bienvenida', date:'1 Abr', owner:'JLV' },
+    { id:'str8', text:'Verificar Zap: Inactivo 7 días → WA retención', date:'1 Abr', owner:'JLV' },
+  ],
+  'skool': [
+    { id:'sk1', text:'Configurar comunidad Skool: nombre, descripción, foto de portada', date:'2 Abr', owner:'JLV', ref:'Guia_Setup_Skool_V8.2.docx' },
+    { id:'sk2', text:'Configurar los 5 niveles de acceso por tier en Skool', date:'3 Abr', owner:'JLV' },
+    { id:'sk3', text:'Subir primer módulo de bienvenida en Skool', date:'5 Abr', owner:'JLV + Javier' },
+    { id:'sk4', text:'Activar Skool Plan Hobby ($9/mes) — upgrade a Pro cuando alcance 8+ Premium', date:'2 Abr', owner:'JLV' },
+    { id:'sk5', text:'Invitar a los ICAs firmados como instructores en Skool', date:'10 Abr', owner:'JLV' },
+    { id:'sk6', text:'Prueba completa del flujo: alumno compra → Stripe → Skool → WA bienvenida', date:'10 Abr', owner:'JLV', priority:'high' },
+  ],
+  'cont-s1': [
+    { id:'cs1', text:'Grabar contenido rápido con Note 10+: "¿Por qué abandonas la guitarra?" (IC3)', date:'31 Mar', owner:'JLV', ref:'Biblia_Produccion_Visual_V1.docx' },
+    { id:'cs2', text:'Publicar en TikTok e Instagram: Hook IC1 "¿Tocas solo en tu cuarto?"', date:'1 Abr', owner:'JLV', ref:'Calendario_Contenido_S1.xlsx' },
+    { id:'cs3', text:'Publicar en YouTube Shorts: Demo JackTrip <25ms', date:'2 Abr', owner:'JLV' },
+    { id:'cs4', text:'Publicar en Instagram: Carrusel "5 razones para unirte ahora"', date:'3 Abr', owner:'JLV' },
+    { id:'cs5', text:'Publicar Story con link directo a WhatsApp + Poll', date:'4 Abr', owner:'JLV' },
+    { id:'cs6', text:'Publicar TikTok: "Lo que lograrás en 90 días con BandLoop™"', date:'5 Abr', owner:'JLV' },
+    { id:'cs7', text:'Resumen semanal: revisión KPIs (seguidores, alcance, leads WA)', date:'6 Abr', owner:'JLV', ref:'Calendario_KPIs.xlsx' },
+  ],
+  'film1': [
+    { id:'f1', text:'Cargar Note 10+ al 100% y verificar espacio (mín. 20GB libre)', date:'6 Abr', owner:'JLV' },
+    { id:'f2', text:'Preparar kit: tripod mini + LED panel + mic shotgun USB-C', date:'6 Abr', owner:'JLV', ref:'Biblia_Produccion_Visual_V1.docx' },
+    { id:'f3', text:'Confirmar horario con Javier (10am–1pm luz natural óptima)', date:'5 Abr', owner:'JLV + Javier', priority:'high' },
+    { id:'f4', text:'Grabar 7 Master Shots (MCU, ECU manos, Wide, OTS, POV, Slow-Mo, Selfie)', date:'7 Abr', owner:'JLV + Javier', ref:'Biblia_Produccion_Visual_V1.docx' },
+    { id:'f5', text:'Grabar protocolo 3 ángulos (clap sync) para cada pieza', date:'7 Abr', owner:'JLV' },
+    { id:'f6', text:'Exportar footage al MacBook Air al terminar sesión', date:'7 Abr', owner:'JLV' },
+    { id:'f7', text:'Editar mínimo 3 piezas de contenido de la sesión (Reels/TikToks)', date:'8-9 Abr', owner:'JLV' },
+  ],
+  'film2': [
+    { id:'f8', text:'Sesión #2 — Casa JLV (sala: luz foco + ventana)', date:'14 Abr', owner:'JLV', ref:'Biblia_Produccion_Visual_V1.docx' },
+    { id:'f9', text:'Sesión #3 — La Maquila (escenario Zona Río)', date:'21 Abr', owner:'JLV + Javier' },
+    { id:'f10', text:'Sesión #4 — República Malta (escenario Zona Río)', date:'28 Abr', owner:'JLV + Javier' },
+    { id:'f11', text:'Sesión #5 — Casa Javier (contenido avanzado)', date:'5 May', owner:'JLV + Javier' },
+    { id:'f12', text:'Sesión #6 — Highlight reel + video de lanzamiento oficial', date:'19 May', owner:'JLV + Javier', priority:'high' },
+  ],
+  'launch-gate': [
+    { id:'lg1', text:'✅ Gate 0→1: Mínimo 5 alumnos pagos activos en Skool', date:'1 May', owner:'JLV', priority:'high' },
+    { id:'lg2', text:'✅ Gate: Todos los ICAs firmados con ICA activo', date:'1 May', owner:'JLV', priority:'high' },
+    { id:'lg3', text:'✅ Gate: WhatsApp Business configurado y funcional', date:'1 May', owner:'JLV', priority:'high' },
+    { id:'lg4', text:'✅ Gate: Mínimo 10 piezas de contenido publicadas', date:'1 May', owner:'JLV' },
+    { id:'lg5', text:'✅ Gate: Stripe + Zapier + Skool funcionando end-to-end', date:'1 May', owner:'JLV', priority:'high' },
+  ],
+  'launch-pre': [
+    { id:'lp1', text:'Campaña de expectativa: "Algo llega el 31 de Mayo" en todas las redes', date:'1 May', owner:'JLV + Javier' },
+    { id:'lp2', text:'Invitaciones personalizadas vía WhatsApp a lista de prospectos calientes', date:'15 May', owner:'JLV', ref:'Scripts_WhatsApp_V1.docx' },
+    { id:'lp3', text:'LLC Delaware constituida y Stripe Connect Express activo', date:'20 May', owner:'JLV', priority:'high' },
+    { id:'lp4', text:'Prueba final del flujo completo: pago → dispersión → acceso Skool', date:'25 May', owner:'JLV', priority:'high' },
+    { id:'lp5', text:'Video teaser de lanzamiento publicado (highlight reel sesión #6)', date:'28 May', owner:'JLV + Javier' },
+    { id:'lp6', text:'Notificación por WA: "Lanzamos en 3 días" a toda la lista', date:'28 May', owner:'JLV' },
+    { id:'lp7', text:'Notificación por WA: "Lanzamos MAÑANA — oferta solo por 48 horas"', date:'30 May', owner:'JLV', priority:'high' },
+  ],
+  'launch-day': [
+    { id:'ld1', text:'🎸 Publicar lanzamiento en todas las redes simultáneamente', date:'31 May', owner:'JLV + Javier', priority:'high' },
+    { id:'ld2', text:'Activar mensaje de lanzamiento en WA Business (blast a toda la lista)', date:'31 May', owner:'JLV', priority:'high', ref:'Estrategia_WhatsApp_V1.docx' },
+    { id:'ld3', text:'Monitorear Stripe en tiempo real: primeras inscripciones', date:'31 May', owner:'JLV', priority:'high' },
+    { id:'ld4', text:'Responder todos los mensajes WA en menos de 15 minutos', date:'31 May', owner:'JLV', priority:'high' },
+    { id:'ld5', text:'Verificar dispersión automática a ICAs (primer pago vía Connect Express)', date:'31 May', owner:'JLV', priority:'high' },
+    { id:'ld6', text:'🍾 Reunión de equipo virtual: celebración y revisión del día 1', date:'31 May', owner:'Equipo completo' },
+  ],
+};
+
+// =====================
+// RENDER TASKS
+// =====================
+function renderTasks(containerId, taskArr) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  taskArr.forEach(task => {
+    const done = localStorage.getItem('gzbr_task_' + task.id) === '1';
+    const div = document.createElement('div');
+    div.className = 'task-item' + (task.priority === 'high' ? ' priority-high' : task.priority === 'mid' ? ' priority-mid' : '') + (done ? ' done' : '');
+    div.innerHTML = `
+      <div class="task-cb ${done ? 'checked' : ''}" onclick="toggleTask('${task.id}', this)"></div>
+      <div class="task-body">
+        <div class="task-text">${task.text}</div>
+        <div class="task-meta">
+          ${task.date ? `<span class="task-date ${task.date.includes('HOY') ? 'urgent' : task.date.includes('Abr') || task.date.includes('Mar') ? 'soon' : ''}">${task.date}</span>` : ''}
+          ${task.owner ? `<span class="task-owner" style="color:var(--muted)">${task.owner}</span>` : ''}
+          ${task.ref ? `<span class="task-ref">📄 ${task.ref}</span>` : ''}
+        </div>
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function toggleTask(id, el) {
+  const key = 'gzbr_task_' + id;
+  const current = localStorage.getItem(key) === '1';
+  localStorage.setItem(key, current ? '0' : '1');
+  const taskItem = el.parentElement;
+  el.classList.toggle('checked', !current);
+  taskItem.classList.toggle('done', !current);
+  updateProgress();
+  updateNavCount();
+}
+
+function initTasks() {
+  renderTasks('tasks-hoy', TASKS.hoy);
+  renderTasks('tasks-jlv-s1', TASKS['jlv-s1']);
+  renderTasks('tasks-jlv-s2', TASKS['jlv-s2']);
+  renderTasks('tasks-jlv-s3', TASKS['jlv-s3']);
+  renderTasks('tasks-jlv-launch', TASKS['jlv-launch']);
+  renderTasks('tasks-javier-apr', TASKS['javier-apr']);
+  renderTasks('tasks-javier-may', TASKS['javier-may']);
+  renderTasks('tasks-ignacio', TASKS.ignacio);
+  renderTasks('tasks-jperes', TASKS.jperes);
+  renderTasks('tasks-perla', TASKS.perla);
+  renderTasks('tasks-carolina', TASKS.carolina);
+  renderTasks('tasks-llc-f1', TASKS['llc-f1']);
+  renderTasks('tasks-llc-f2', TASKS['llc-f2']);
+  renderTasks('tasks-llc-f3', TASKS['llc-f3']);
+  renderTasks('tasks-wa', TASKS.wa);
+  renderTasks('tasks-stripe', TASKS.stripe);
+  renderTasks('tasks-skool', TASKS.skool);
+  renderTasks('tasks-cont-s1', TASKS['cont-s1']);
+  renderTasks('tasks-film1', TASKS.film1);
+  renderTasks('tasks-film2', TASKS.film2);
+  renderTasks('tasks-launch-gate', TASKS['launch-gate']);
+  renderTasks('tasks-launch-pre', TASKS['launch-pre']);
+  renderTasks('tasks-launch-day', TASKS['launch-day']);
+}
+
+// =====================
+// PROGRESS
+// =====================
+const PROGRESS_GROUPS = [
+  { name: '🔥 HOY', color: 'var(--red)', keys: TASKS.hoy.map(t=>t.id) },
+  { name: '👤 José Luis', color: 'var(--red)', keys: [...TASKS['jlv-s1'], ...TASKS['jlv-s2'], ...TASKS['jlv-s3'], ...TASKS['jlv-launch']].map(t=>t.id) },
+  { name: '🎸 Javier Dir.Art', color: 'var(--gold)', keys: [...TASKS['javier-apr'], ...TASKS['javier-may']].map(t=>t.id) },
+  { name: '🎓 ICAs (total)', color: 'var(--blue)', keys: [...TASKS.ignacio, ...TASKS.jperes, ...TASKS.perla, ...TASKS.carolina].map(t=>t.id) },
+  { name: '🏛 LLC Delaware', color: 'var(--green)', keys: [...TASKS['llc-f1'], ...TASKS['llc-f2'], ...TASKS['llc-f3']].map(t=>t.id) },
+  { name: '⚙️ Plataforma', color: 'var(--teal)', keys: [...TASKS.wa, ...TASKS.stripe, ...TASKS.skool].map(t=>t.id) },
+  { name: '🎬 Contenido', color: 'var(--purple)', keys: [...TASKS['cont-s1'], ...TASKS.film1, ...TASKS.film2].map(t=>t.id) },
+  { name: '🚀 Lanzamiento', color: 'var(--yellow)', keys: [...TASKS['launch-gate'], ...TASKS['launch-pre'], ...TASKS['launch-day']].map(t=>t.id) },
+];
+
+function getGroupProgress(keys) {
+  if (!keys.length) return { done: 0, total: 0, pct: 0 };
+  const done = keys.filter(id => localStorage.getItem('gzbr_task_' + id) === '1').length;
+  return { done, total: keys.length, pct: Math.round((done / keys.length) * 100) };
+}
+
+function getSemColor(pct) {
+  if (pct >= 70) return 'var(--green)';
+  if (pct >= 30) return 'var(--yellow)';
+  return 'var(--red)';
+}
+
+function updateProgress() {
+  const grid = document.getElementById('progressGrid');
+  grid.innerHTML = '';
+  PROGRESS_GROUPS.forEach(g => {
+    const { done, total, pct } = getGroupProgress(g.keys);
+    const card = document.createElement('div');
+    card.className = 'progress-card';
+    card.innerHTML = `
+      <div class="progress-head">
+        <div class="progress-name">${g.name}</div>
+        <div class="progress-pct" style="color:${getSemColor(pct)}">${pct}%</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:${pct}%; background:${g.color};"></div>
+      </div>
+      <div class="progress-detail">${done} de ${total} tareas completadas</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function updateNavCount() {
+  const allIds = Object.values(TASKS).flat().map(t => t.id);
+  const done = allIds.filter(id => localStorage.getItem('gzbr_task_' + id) === '1').length;
+  const pct = Math.round((done / allIds.length) * 100);
+  document.getElementById('navCount').textContent = pct + '%';
+}
+
+// =====================
+// TABS
+// =====================
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById(tabId);
+  if (panel) panel.classList.add('active');
+  const btns = document.querySelectorAll('.tab-btn');
+  btns.forEach(b => { if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(tabId)) b.classList.add('active'); });
+}
+
+function goToTab(tabId) {
+  const section = document.getElementById('acciones');
+  if (section) section.scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => switchTab(tabId), 400);
+}
+
+// =====================
+// COUNTDOWN
+// =====================
+function updateCountdown() {
+  const launch = new Date('2026-05-31T09:00:00-07:00');
+  const now = new Date();
+  const diff = launch - now;
+  if (diff <= 0) {
+    document.getElementById('cDays').textContent = '🎉';
+    document.getElementById('cHours').textContent = '00';
+    document.getElementById('cMins').textContent = '00';
+    document.getElementById('cSecs').textContent = '00';
+    return;
+  }
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('cDays').textContent = String(d).padStart(2, '0');
+  document.getElementById('cHours').textContent = String(h).padStart(2, '0');
+  document.getElementById('cMins').textContent = String(m).padStart(2, '0');
+  document.getElementById('cSecs').textContent = String(s).padStart(2, '0');
+}
+
+// =====================
+// EXPORT
+// =====================
+function exportStatus() {
+  const lines = [];
+  lines.push('🎸 *GZBR — Reporte de Avance*');
+  lines.push(`📅 Fecha: ${new Date().toLocaleDateString('es-MX', {weekday:'long', day:'numeric', month:'long', year:'numeric'})}`);
+  lines.push('');
+  PROGRESS_GROUPS.forEach(g => {
+    const { done, total, pct } = getGroupProgress(g.keys);
+    const bar = '█'.repeat(Math.floor(pct/10)) + '░'.repeat(10-Math.floor(pct/10));
+    lines.push(`${g.name}: ${pct}% [${bar}] (${done}/${total})`);
+  });
+  lines.push('');
+  const allIds = Object.values(TASKS).flat().map(t => t.id);
+  const totalDone = allIds.filter(id => localStorage.getItem('gzbr_task_' + id) === '1').length;
+  lines.push(`📊 *Total general: ${Math.round((totalDone/allIds.length)*100)}% (${totalDone}/${allIds.length} tareas)*`);
+  lines.push('');
+  lines.push('🚀 Lanzamiento: 31 de Mayo 2026');
+  lines.push('📲 GuitarZero to BandRock — Método BandLoop™');
+
+  const text = lines.join('\n');
+  const out = document.getElementById('exportOut');
+  out.textContent = text;
+  out.style.display = 'block';
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('✅ Resumen copiado al portapapeles — pégalo en WhatsApp');
+    });
+  }
+}
+
+function confirmReset() {
+  if (confirm('¿Reiniciar TODO tu progreso marcado? Esta acción no se puede deshacer.')) {
+    const allIds = Object.values(TASKS).flat().map(t => t.id);
+    allIds.forEach(id => localStorage.removeItem('gzbr_task_' + id));
+    initTasks();
+    updateProgress();
+    updateNavCount();
+    alert('Progreso reiniciado.');
+  }
+}
+
+// =====================
+// INIT
+// =====================
+document.addEventListener('DOMContentLoaded', () => {
+  initTasks();
+  updateProgress();
+  updateNavCount();
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+});
+</script>
+</body>
+</html>
