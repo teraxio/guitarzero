@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="es" data-lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GuitarZero to BandRock — Nadie deja una banda</title>
+<meta name="description" content="La plataforma musical que convierte músicos solitarios en bandas reales en 30 días. JackTrip <25ms. Bilingüe. Tijuana → Global.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cyan: { DEFAULT: '#00e5ff', dark: '#00b8cc' },
+          magenta: { DEFAULT: '#e040fb', dark: '#b800d8' },
+          dark: { DEFAULT: '#0a0a0f', card: '#12121a', border: 'rgba(255,255,255,0.08)' }
+        },
+        fontFamily: {
+          outfit: ['Outfit', 'sans-serif'],
+          playfair: ['Playfair Display', 'serif'],
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root {
+    --c: #00e5ff;
+    --m: #e040fb;
+    --dk: #0a0a0f;
+    --card: #12121a;
+    --tx: #e8e8f0;
+    --mt: #8888a0;
+    --grad: linear-gradient(135deg, var(--c), var(--m));
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dk);
+    color: var(--tx);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── Custom Cursor ─────────────────────── */
+  #cursor {
+    position: fixed; top: 0; left: 0; z-index: 9999;
+    width: 12px; height: 12px;
+    background: var(--c);
+    border-radius: 50%;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    transition: transform .15s ease, background .2s;
+    transform: translate(-50%, -50%);
+  }
+  #cursor-ring {
+    position: fixed; top: 0; left: 0; z-index: 9998;
+    width: 36px; height: 36px;
+    border: 1.5px solid rgba(0,229,255,.4);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: transform .4s cubic-bezier(.23,1,.32,1), opacity .3s;
+  }
+  body:has(a:hover) #cursor,
+  body:has(button:hover) #cursor { transform: translate(-50%,-50%) scale(2.5); background: var(--m); }
+  body:has(a:hover) #cursor-ring,
+  body:has(button:hover) #cursor-ring { transform: translate(-50%,-50%) scale(1.6); opacity: .6; }
+
+  @media (pointer: coarse) { #cursor, #cursor-ring { display: none; } body { cursor: auto; } }
+
+  /* ── Scrollbar ─────────────────────────── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--dk); }
+  ::-webkit-scrollbar-thumb { background: var(--grad); border-radius: 2px; }
+
+  /* ── Gradient Text ─────────────────────── */
+  .grad-text {
+    background: var(--grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Glow ──────────────────────────────── */
+  .glow-c { text-shadow: 0 0 20px rgba(0,229,255,.6), 0 0 60px rgba(0,229,255,.2); }
+  .glow-m { text-shadow: 0 0 20px rgba(224,64,251,.6), 0 0 60px rgba(224,64,251,.2); }
+  .glow-btn { box-shadow: 0 0 24px rgba(0,229,255,.4), 0 8px 32px rgba(0,229,255,.15); }
+  .glow-btn-m { box-shadow: 0 0 24px rgba(224,64,251,.4), 0 8px 32px rgba(224,64,251,.15); }
+
+  /* ── Glass ─────────────────────────────── */
+  .glass {
+    background: rgba(18,18,26,.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .glass-c {
+    background: rgba(0,229,255,.06);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(0,229,255,.2);
+  }
+  .glass-m {
+    background: rgba(224,64,251,.06);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(224,64,251,.2);
+  }
+
+  /* ── Noise Texture ─────────────────────── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: .4;
+  }
+
+  /* ── Scanlines ─────────────────────────── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 1;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px);
+    pointer-events: none;
+  }
+
+  /* ── Canvas particles ──────────────────── */
+  #particle-canvas {
+    position: absolute; inset: 0; z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── Navbar ────────────────────────────── */
+  #navbar {
+    position: fixed; top: 16px; left: 16px; right: 16px;
+    z-index: 100;
+    border-radius: 16px;
+    transition: background .3s, box-shadow .3s;
+  }
+  #navbar.scrolled { box-shadow: 0 8px 40px rgba(0,0,0,.6); }
+
+  .nav-link {
+    color: var(--mt);
+    font-size: .85rem; font-weight: 500; letter-spacing: .04em;
+    transition: color .2s;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .nav-link:hover { color: var(--c); }
+
+  /* ── Lang Toggle ───────────────────────── */
+  .lang-btn {
+    font-size: .75rem; font-weight: 700; letter-spacing: .08em;
+    padding: 4px 10px; border-radius: 6px;
+    border: 1px solid rgba(255,255,255,.12);
+    cursor: pointer; transition: all .2s;
+    background: transparent; color: var(--mt);
+  }
+  .lang-btn.active { background: var(--grad); color: #fff; border-color: transparent; }
+
+  /* ── Hero ──────────────────────────────── */
+  #hero {
+    position: relative; min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 120px 24px 80px;
+    overflow: hidden;
+  }
+
+  .hero-orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); pointer-events: none;
+  }
+  .orb-c { width: 600px; height: 600px; background: rgba(0,229,255,.12); top: -100px; left: -100px; }
+  .orb-m { width: 500px; height: 500px; background: rgba(224,64,251,.1); bottom: -50px; right: -80px; }
+
+  #hero-headline {
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 900; line-height: .95;
+    letter-spacing: -.03em;
+  }
+
+  .hero-sub {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--mt); max-width: 600px; line-height: 1.6;
+  }
+
+  /* ── Glitch ────────────────────────────── */
+  .glitch { position: relative; }
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute; top: 0; left: 0; right: 0;
+    background: var(--grad);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .glitch::before {
+    animation: glitch1 4s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  }
+  .glitch::after {
+    animation: glitch2 4s infinite;
+    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+  }
+  @keyframes glitch1 {
+    0%,94%,100% { transform: none; opacity: 0; }
+    95% { transform: skewX(-2deg) translateX(3px); opacity: .7; }
+    97% { transform: skewX(1deg) translateX(-2px); opacity: .5; }
+  }
+  @keyframes glitch2 {
+    0%,96%,100% { transform: none; opacity: 0; }
+    97% { transform: skewX(2deg) translateX(-3px); opacity: .6; }
+    99% { transform: skewX(-1deg) translateX(2px); opacity: .4; }
+  }
+
+  /* ── Stat Ticker ───────────────────────── */
+  #stats-bar {
+    display: flex; gap: 0;
+    background: rgba(255,255,255,.03);
+    border-top: 1px solid rgba(255,255,255,.05);
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .stat-item {
+    flex: 1; padding: 28px 24px; text-align: center;
+    border-right: 1px solid rgba(255,255,255,.05);
+    position: relative;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900; line-height: 1;
+    background: var(--grad);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .stat-label { font-size: .75rem; font-weight: 500; color: var(--mt); text-transform: uppercase; letter-spacing: .08em; margin-top: 6px; }
+
+  /* ── Sections ──────────────────────────── */
+  section { position: relative; z-index: 2; }
+
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: .7rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--c); margin-bottom: 16px;
+  }
+  .section-tag::before {
+    content: ''; display: block;
+    width: 24px; height: 1px; background: var(--c);
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900; line-height: 1.05;
+    letter-spacing: -.02em;
+  }
+
+  /* ── Cards ─────────────────────────────── */
+  .feature-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 16px; padding: 28px;
+    transition: transform .3s, border-color .3s, box-shadow .3s;
+    cursor: pointer;
+  }
+  .feature-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0,229,255,.3);
+    box-shadow: 0 20px 60px rgba(0,229,255,.08);
+  }
+
+  /* ── Community Cards ───────────────────── */
+  .comm-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 16px; padding: 24px;
+    transition: transform .3s ease, border-color .3s, box-shadow .3s;
+    cursor: pointer; overflow: hidden; position: relative;
+  }
+  .comm-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--grad); opacity: 0;
+    transition: opacity .3s;
+  }
+  .comm-card:hover { transform: translateY(-8px) scale(1.02); }
+  .comm-card:hover::before { opacity: .06; }
+  .comm-card:hover { border-color: rgba(0,229,255,.35); box-shadow: 0 20px 60px rgba(0,229,255,.1); }
+
+  .comm-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 16px;
+    background: rgba(0,229,255,.08);
+    border: 1px solid rgba(0,229,255,.15);
+    position: relative; z-index: 1;
+  }
+
+  /* ── Pricing ───────────────────────────── */
+  .pricing-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 20px; padding: 32px 28px;
+    transition: transform .3s, box-shadow .3s, border-color .3s;
+    cursor: pointer; position: relative; overflow: hidden;
+  }
+  .pricing-card::after {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: var(--grad); opacity: 0;
+    transition: opacity .3s;
+  }
+  .pricing-card:hover { transform: translateY(-8px); }
+  .pricing-card:hover::after { opacity: 1; }
+  .pricing-card.popular {
+    border-color: rgba(0,229,255,.3);
+    box-shadow: 0 0 40px rgba(0,229,255,.08);
+  }
+  .pricing-card.popular::after { opacity: 1; }
+
+  .popular-badge {
+    position: absolute; top: 20px; right: 20px;
+    font-size: .65rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; padding: 4px 10px; border-radius: 20px;
+    background: var(--grad); color: #fff;
+  }
+
+  .price-amount {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 900; line-height: 1;
+  }
+
+  .feature-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: .875rem; color: var(--mt); padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+  }
+  .feature-list li:last-child { border-bottom: none; }
+  .feature-list .check {
+    width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px;
+    color: var(--c);
+  }
+
+  /* ── CTA Button ────────────────────────── */
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--grad);
+    color: #fff; font-weight: 700; font-size: .9rem;
+    padding: 14px 28px; border-radius: 12px; border: none;
+    cursor: pointer; transition: transform .2s, box-shadow .2s;
+    letter-spacing: .02em; text-decoration: none;
+    box-shadow: 0 4px 24px rgba(0,229,255,.25);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0,229,255,.4); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent;
+    color: var(--tx); font-weight: 600; font-size: .9rem;
+    padding: 14px 28px; border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.15);
+    cursor: pointer; transition: border-color .2s, color .2s;
+    letter-spacing: .02em; text-decoration: none;
+  }
+  .btn-outline:hover { border-color: var(--c); color: var(--c); }
+
+  /* ── Timeline ──────────────────────────── */
+  .timeline-item { position: relative; padding-left: 60px; }
+  .timeline-item::before {
+    content: ''; position: absolute; left: 20px; top: 40px; bottom: -20px;
+    width: 1px; background: rgba(0,229,255,.2);
+  }
+  .timeline-item:last-child::before { display: none; }
+  .timeline-dot {
+    position: absolute; left: 0; top: 8px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--card);
+    border: 2px solid var(--c);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 800; color: var(--c);
+    box-shadow: 0 0 16px rgba(0,229,255,.3);
+  }
+
+  /* ── Competitor Table ──────────────────── */
+  .comp-table { border-collapse: collapse; width: 100%; }
+  .comp-table th, .comp-table td {
+    padding: 12px 16px; text-align: center; font-size: .85rem;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .comp-table th { color: var(--mt); font-weight: 600; font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; }
+  .comp-table td:first-child { text-align: left; color: var(--tx); }
+  .comp-gzbr { color: var(--c); font-weight: 700; }
+
+  /* ── Reveal animations ─────────────────── */
+  .reveal { opacity: 0; transform: translateY(40px); }
+  .reveal-left { opacity: 0; transform: translateX(-40px); }
+  .reveal-right { opacity: 0; transform: translateX(40px); }
+  .reveal-scale { opacity: 0; transform: scale(.92); }
+
+  /* ── Founders Banner ───────────────────── */
+  .founders-banner {
+    background: linear-gradient(135deg, rgba(0,229,255,.08), rgba(224,64,251,.08));
+    border: 1px solid rgba(0,229,255,.2);
+    border-radius: 20px; padding: 32px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .founders-banner::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: var(--grad);
+  }
+
+  /* ── Mobile Menu ───────────────────────── */
+  #mobile-menu {
+    display: none; flex-direction: column; gap: 4px;
+    padding: 16px 0 8px;
+  }
+  #mobile-menu.open { display: flex; }
+  .mobile-link {
+    color: var(--mt); font-size: .9rem; font-weight: 500;
+    padding: 10px 16px; border-radius: 8px;
+    transition: background .2s, color .2s;
+    cursor: pointer; text-decoration: none;
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .mobile-link:hover { background: rgba(0,229,255,.08); color: var(--c); }
+
+  /* ── Reduce Motion ─────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    .glitch::before, .glitch::after { display: none; }
+  }
+
+  /* ── Responsive ────────────────────────── */
+  @media (max-width: 768px) {
+    #stats-bar { flex-direction: column; }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.05); }
+    #hero-headline { font-size: clamp(2.8rem, 12vw, 5rem); }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- Custom Cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ═══════════════════════════════ NAVBAR ═══ -->
+<nav id="navbar" class="glass">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="#hero" class="flex items-center gap-2" style="text-decoration:none">
+      <div style="width:32px;height:32px;background:var(--grad);border-radius:8px;display:flex;align-items:center;justify-content:center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      </div>
+      <span class="grad-text font-outfit" style="font-weight:900;letter-spacing:-.05em;font-size:clamp(2.8rem,7vw,5.5rem);line-height:1">GZBR</span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#truth" class="nav-link" data-es="Para Ti" data-en="For You">Para Ti</a>
+      <a href="#method" class="nav-link" data-es="30 Días" data-en="30 Days">30 Días</a>
+      <a href="#communities" class="nav-link" data-es="Comunidades" data-en="Communities">Comunidades</a>
+      <a href="#pricing" class="nav-link" data-es="Planes" data-en="Plans">Planes</a>
+    </div>
+
+    <!-- Right -->
+    <div class="flex items-center gap-3">
+      <div class="flex gap-1">
+        <button class="lang-btn active" onclick="setLang('es')" id="btn-es">ES</button>
+        <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+      </div>
+      <a href="#join" class="btn-primary hidden md:inline-flex" style="padding:10px 20px;font-size:.8rem" data-es="Únete" data-en="Join">Únete</a>
+      <!-- Hamburger -->
+      <button id="hamburger" class="md:hidden p-2 rounded-lg" style="background:rgba(255,255,255,.06);border:none;cursor:pointer" onclick="toggleMenu()" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--tx)" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="px-4 pb-4">
+    <a href="#truth" class="mobile-link" data-es="Para Ti" data-en="For You" onclick="closeMenu()">Para Ti</a>
+    <a href="#method" class="mobile-link" data-es="30 Días" data-en="30 Days" onclick="closeMenu()">30 Días</a>
+    <a href="#communities" class="mobile-link" data-es="Comunidades" data-en="Communities" onclick="closeMenu()">Comunidades</a>
+    <a href="#pricing" class="mobile-link" data-es="Planes" data-en="Plans" onclick="closeMenu()">Planes</a>
+    <a href="#join" class="btn-primary mt-4 justify-center" data-es="Únete Ahora" data-en="Join Now" onclick="closeMenu()">Únete Ahora</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════ HERO ════ -->
+<section id="hero">
+  <canvas id="particle-canvas"></canvas>
+  <div class="orb-c hero-orb"></div>
+  <div class="orb-m hero-orb"></div>
+
+  <div class="relative z-10 max-w-5xl mx-auto">
+    <!-- Label -->
+    <div id="hero-tag" class="inline-flex items-center gap-2 mb-8 glass-c px-4 py-2 rounded-full" style="opacity:0">
+      <span style="width:8px;height:8px;background:var(--c);border-radius:50%;animation:pulse 2s infinite"></span>
+      <span class="text-xs font-semibold" style="color:var(--c);letter-spacing:.12em;text-transform:uppercase" data-es="Lanzamiento Última Semana Mayo 2026 · Tijuana → Global" data-en="Launching Last Week May 2026 · Tijuana → Global">Lanzamiento Última Semana Mayo 2026 · Tijuana → Global</span>
+    </div>
+
+    <!-- Main Headline -->
+    <h1 id="hero-headline" class="glitch grad-text mb-4" data-text="Nadie deja una banda">
+      <span data-es="Nadie deja<br>una banda" data-en="Nobody quits<br>a band">Nadie deja<br>una banda</span>
+    </h1>
+
+    <!-- Subheadline -->
+    <p id="hero-sub" class="hero-sub mx-auto mb-10" style="opacity:0" data-es="Sientes esa música dentro de ti.<br>Nosotros te damos la banda para sacarla." data-en="You feel that music inside you.<br>We give you the band to set it free.">
+      Sientes esa música dentro de ti.<br>Nosotros te damos la banda para sacarla.
+    </p>
+
+    <!-- CTAs -->
+    <div id="hero-ctas" class="flex flex-wrap items-center justify-center gap-4 mb-16" style="opacity:0">
+      <a href="#pricing" class="btn-primary glow-btn" style="font-size:1rem;padding:16px 32px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span data-es="Tu banda en 30 días" data-en="Your band in 30 days">Tu banda en 30 días</span>
+      </a>
+      <a href="#truth" class="btn-outline">
+        <span data-es="Conócenos" data-en="Learn more">Conócenos</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <!-- Social proof -->
+    <div id="hero-proof" class="flex flex-wrap items-center justify-center gap-8 text-sm" style="opacity:0">
+      <div class="flex items-center gap-2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--c)" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span style="color:var(--mt)" data-es="<25ms latencia real · Como en la misma sala" data-en="<25ms real latency · Like being in the same room">&lt;25ms latencia · Como estar en la misma sala</span>
+      </div>
+      <div style="width:1px;height:20px;background:rgba(255,255,255,.1)" class="hidden md:block"></div>
+      <div class="flex items-center gap-2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span style="color:var(--mt)" data-es="0 competidores directos en el mundo" data-en="0 direct competitors worldwide">0 competidores directos en el mundo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2" style="opacity:.4">
+    <span class="text-xs" style="color:var(--mt);letter-spacing:.1em;text-transform:uppercase;font-size:.65rem" data-es="Scroll" data-en="Scroll">Scroll</span>
+    <div style="width:1px;height:40px;background:linear-gradient(var(--c),transparent);animation:scrollPulse 1.5s infinite"></div>
+  </div>
+</section>
+
+<style>
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+@keyframes scrollPulse { 0%{opacity:0;transform:scaleY(0);transform-origin:top} 50%{opacity:1} 100%{opacity:0;transform:scaleY(1);transform-origin:bottom} }
+</style>
+
+<!-- ═══════════════════════════════ STATS ═══ -->
+<div id="stats-bar" class="relative z-10">
+  <div class="stat-item">
+    <div class="stat-num" id="stat-market">$3.32B</div>
+    <div class="stat-label" data-es="Mercado 2025" data-en="Market 2025">Mercado 2025</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" id="stat-latency">&lt;25ms</div>
+    <div class="stat-label" data-es="Latencia JackTrip" data-en="JackTrip Latency">Latencia JackTrip</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" id="stat-days">30</div>
+    <div class="stat-label" data-es="Días a tu banda" data-en="Days to your band">Días a tu banda</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" id="stat-comp">0</div>
+    <div class="stat-label" data-es="Competidores directos" data-en="Direct competitors">Competidores directos</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">9</div>
+    <div class="stat-label" data-es="Comunidades activas" data-en="Active communities">Comunidades activas</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ TRUTH ═══ -->
+<section id="truth" class="py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="section-tag reveal">La Verdad</div>
+    <h2 class="section-title mb-6 reveal" data-es="El 80% abandona la banda escolar.<br><em class='grad-text' style='font-style:italic'>No por falta de ganas.</em>" data-en="80% quit the school band.<br><em class='grad-text' style='font-style:italic'>Not for lack of passion.</em>">
+      El 80% abandona la banda escolar.<br>
+      <em class="grad-text" style="font-style:italic">No por falta de ganas.</em>
+    </h2>
+    <p class="text-lg mb-16 reveal" style="color:var(--mt);max-width:600px;line-height:1.7" data-es="Tocar solo es frustrante. Sin comunidad, la motivación muere. Nosotros lo resolvemos desde el Día 1." data-en="Playing alone is frustrating. Without community, motivation dies. We solve that from Day 1.">
+      Tocar solo es frustrante. Sin comunidad, la motivación muere. Nosotros lo resolvemos desde el Día 1.
+    </p>
+
+    <!-- Problem vs Solution Grid -->
+    <div class="grid md:grid-cols-2 gap-8 mb-20">
+      <!-- Problem -->
+      <div class="glass-m rounded-2xl p-8 reveal-left">
+        <div class="flex items-center gap-3 mb-6">
+          <div style="width:36px;height:36px;background:rgba(224,64,251,.15);border:1px solid rgba(224,64,251,.3);border-radius:10px;display:flex;align-items:center;justify-content:center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e040fb" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </div>
+          <h3 class="font-bold text-lg" style="color:#e040fb" data-es="El problema" data-en="The problem">El problema</h3>
+        </div>
+        <ul class="space-y-3" style="color:var(--mt);font-size:.9rem">
+          <li class="flex gap-3"><span style="color:#e040fb;flex-shrink:0">×</span><span data-es="Apps que te enseñan solo, sin nadie con quien tocar" data-en="Apps that teach you alone, no one to play with">Apps que te enseñan solo, sin nadie con quien tocar</span></li>
+          <li class="flex gap-3"><span style="color:#e040fb;flex-shrink:0">×</span><span data-es="Latencia de 100-300ms: imposible tocar en tiempo real" data-en="100-300ms latency: impossible to play in real time">Latencia de 100-300ms: imposible tocar en tiempo real</span></li>
+          <li class="flex gap-3"><span style="color:#e040fb;flex-shrink:0">×</span><span data-es="Sin protección de tu música ni conexión industrial" data-en="No protection for your music, no industry connection">Sin protección de tu música ni conexión industrial</span></li>
+          <li class="flex gap-3"><span style="color:#e040fb;flex-shrink:0">×</span><span data-es="75% se arrepiente de haber dejado la música" data-en="75% regret quitting music">75% se arrepiente de haber dejado la música</span></li>
+        </ul>
+      </div>
+
+      <!-- Solution -->
+      <div class="glass-c rounded-2xl p-8 reveal-right">
+        <div class="flex items-center gap-3 mb-6">
+          <div style="width:36px;height:36px;background:rgba(0,229,255,.15);border:1px solid rgba(0,229,255,.3);border-radius:10px;display:flex;align-items:center;justify-content:center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3 class="font-bold text-lg" style="color:#00e5ff" data-es="GZBR resuelve" data-en="GZBR solves it">GZBR resuelve</h3>
+        </div>
+        <ul class="space-y-3" style="color:var(--mt);font-size:.9rem">
+          <li class="flex gap-3"><span style="color:var(--c);flex-shrink:0">✓</span><span data-es="Banda real desde el Día 1 — tocas con humanos de carne y hueso" data-en="Real band from Day 1 — you play with real people">Banda real desde el Día 1 — tocas con humanos de carne y hueso</span></li>
+          <li class="flex gap-3"><span style="color:var(--c);flex-shrink:0">✓</span><span data-es="JackTrip: <25ms — como estar en la misma sala" data-en="JackTrip: <25ms — like being in the same room">JackTrip: &lt;25ms — como estar en la misma sala</span></li>
+          <li class="flex gap-3"><span style="color:var(--c);flex-shrink:0">✓</span><span data-es="IP Fortress: tu música es tuya, legal y protegida" data-en="IP Fortress: your music is yours, legally protected">IP Fortress: tu música es tuya, legal y protegida</span></li>
+          <li class="flex gap-3"><span style="color:var(--c);flex-shrink:0">✓</span><span data-es="Bilingüe: EN/ES — Tijuana → Global sin barreras" data-en="Bilingual: EN/ES — Tijuana → Global, no barriers">Bilingüe: EN/ES — Tijuana → Global sin barreras</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Competitor Comparison -->
+    <div class="glass rounded-2xl p-8 reveal-scale overflow-x-auto">
+      <h3 class="font-bold text-xl mb-6 text-center" data-es="¿Por qué no las alternativas?" data-en="Why not the alternatives?">¿Por qué no las alternativas?</h3>
+      <table class="comp-table min-w-[600px] w-full">
+        <thead>
+          <tr>
+            <th class="text-left" data-es="Plataforma" data-en="Platform">Plataforma</th>
+            <th data-es="Banda real" data-en="Real band">Banda real</th>
+            <th data-es="<25ms" data-en="<25ms">&lt;25ms</th>
+            <th data-es="Bilingüe" data-en="Bilingual">Bilingüe</th>
+            <th data-es="IP Legal" data-en="IP Legal">IP Legal</th>
+            <th data-es="Precio/mes" data-en="Price/mo">Precio/mes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="comp-gzbr font-bold">GZBR ⚡</td>
+            <td class="comp-gzbr">✓</td>
+            <td class="comp-gzbr">✓</td>
+            <td class="comp-gzbr">✓</td>
+            <td class="comp-gzbr">✓</td>
+            <td class="comp-gzbr">$14</td>
+          </tr>
+          <tr>
+            <td>Fender Play</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">$14.99</td>
+          </tr>
+          <tr>
+            <td>Yousician</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">Parcial</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">$19.99</td>
+          </tr>
+          <tr>
+            <td>Guitar Tricks</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">$19.95</td>
+          </tr>
+          <tr>
+            <td>YouTube</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">Parcial</td>
+            <td style="color:var(--mt)">✗</td>
+            <td style="color:var(--mt)">Gratis</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-center mt-4 text-xs font-bold" style="color:var(--c);letter-spacing:.1em;text-transform:uppercase" data-es="Cero competidores directos en el mundo" data-en="Zero direct competitors in the world">Cero competidores directos en el mundo</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ METHOD ═══ -->
+<section id="method" class="py-24 px-6" style="background:linear-gradient(180deg,transparent,rgba(0,229,255,.02),transparent)">
+  <div class="max-w-4xl mx-auto">
+    <div class="section-tag reveal" data-es="El Método" data-en="The Method">El Método</div>
+    <h2 class="section-title mb-4 reveal" data-es="Tu banda.<br><span class='grad-text'>Desde el Día 1.</span>" data-en="Your band.<br><span class='grad-text'>From Day 1.</span>">
+      Tu banda.<br><span class="grad-text">Desde el Día 1.</span>
+    </h2>
+    <p class="mb-16 reveal" style="color:var(--mt);font-size:1.05rem;line-height:1.7" data-es="El BandLoop™ Method te lleva de cero a músico activo en 30 días. No promesas, metodología." data-en="The BandLoop™ Method takes you from zero to active musician in 30 days. Not promises — methodology.">
+      El BandLoop™ Method te lleva de cero a músico activo en 30 días. No promesas, metodología.
+    </p>
+
+    <div class="space-y-8">
+      <!-- Week 1 -->
+      <div class="timeline-item">
+        <div class="timeline-dot">W1</div>
+        <div class="feature-card">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <div class="section-tag" style="margin-bottom:8px" data-es="Semana 1" data-en="Week 1">Semana 1</div>
+              <h3 class="text-xl font-bold mb-2 grad-text" data-es="Chispa (Spark)" data-en="Spark">Chispa (Spark)</h3>
+              <p style="color:var(--mt);font-size:.9rem;line-height:1.6" data-es="Tu primer riff. Tu primer loop. Tu primera nota que suena a algo real. El momento en que dices:" data-en="Your first riff. Your first loop. Your first note that sounds like something real. The moment you say:">Tu primer riff. Tu primer loop. Tu primera nota que suena a algo real. El momento en que dices:</p>
+            </div>
+            <div class="glass-c rounded-xl px-4 py-2 flex-shrink-0">
+              <p class="font-playfair text-sm" style="font-style:italic;color:var(--c)" data-es='"Eso salió de mí"' data-en='"That came from me"'>"Eso salió de mí"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Week 2 -->
+      <div class="timeline-item">
+        <div class="timeline-dot">W2</div>
+        <div class="feature-card">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <div class="section-tag" style="margin-bottom:8px" data-es="Semana 2" data-en="Week 2">Semana 2</div>
+              <h3 class="text-xl font-bold mb-2 grad-text" data-es="Groove (Ritmo)" data-en="Groove">Groove (Ritmo)</h3>
+              <p style="color:var(--mt);font-size:.9rem;line-height:1.6" data-es="Tocas con tu banda por primera vez via JackTrip. <25ms de latencia. Como estar en la misma sala. El momento en que dices:" data-en="You play with your band for the first time via JackTrip. <25ms latency. Like being in the same room. The moment you say:">Tocas con tu banda por primera vez via JackTrip. &lt;25ms de latencia. El momento en que dices:</p>
+            </div>
+            <div class="glass-c rounded-xl px-4 py-2 flex-shrink-0">
+              <p class="font-playfair text-sm" style="font-style:italic;color:var(--c)" data-es='"Tengo una banda"' data-en='"I have a band"'>"Tengo una banda"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Week 3 -->
+      <div class="timeline-item">
+        <div class="timeline-dot">W3</div>
+        <div class="feature-card">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <div class="section-tag" style="margin-bottom:8px" data-es="Semana 3" data-en="Week 3">Semana 3</div>
+              <h3 class="text-xl font-bold mb-2 grad-text" data-es="Flow (Flujo)" data-en="Flow">Flow (Flujo)</h3>
+              <p style="color:var(--mt);font-size:.9rem;line-height:1.6" data-es="Composición, producción, identidad artística. Tu música empieza a protegerse legalmente (IP Fortress). El momento en que dices:" data-en="Composition, production, artistic identity. Your music starts being legally protected (IP Fortress). The moment you say:">Composición, producción, identidad artística. IP Fortress activo. El momento en que dices:</p>
+            </div>
+            <div class="glass-c rounded-xl px-4 py-2 flex-shrink-0">
+              <p class="font-playfair text-sm" style="font-style:italic;color:var(--c)" data-es='"Esto es MÍO"' data-en='"This is MINE"'>"Esto es MÍO"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Week 4 -->
+      <div class="timeline-item">
+        <div class="timeline-dot">W4</div>
+        <div class="feature-card" style="border-color:rgba(0,229,255,.2)">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <div class="section-tag" style="margin-bottom:8px" data-es="Semana 4" data-en="Week 4">Semana 4</div>
+              <h3 class="text-xl font-bold mb-2 grad-text" data-es="Lanzamiento" data-en="Launch">Lanzamiento</h3>
+              <p style="color:var(--mt);font-size:.9rem;line-height:1.6" data-es="Showcase con la industria. Tu primer demo grabado. Conexión con sellos, managers y booking agents reales. El momento que lo cambia todo:" data-en="Industry showcase. Your first recorded demo. Connection with real labels, managers and booking agents. The moment that changes everything:">Showcase con la industria. Tu primer demo. Conexión con sellos y managers reales. El momento que lo cambia todo:</p>
+            </div>
+            <div class="glass-c rounded-xl px-4 py-2 flex-shrink-0" style="background:rgba(0,229,255,.1);border-color:rgba(0,229,255,.3)">
+              <p class="font-playfair text-sm font-bold" style="font-style:italic;color:var(--c)" data-es='"Soy músico"' data-en='"I am a musician"'>"Soy músico"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ COMMUNITIES ═══ -->
+<section id="communities" class="py-24 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="section-tag reveal" data-es="Las 9 Comunidades" data-en="The 9 Communities">Las 9 Comunidades</div>
+    <h2 class="section-title mb-4 reveal" data-es="Entras por una puerta.<br><span class='grad-text'>Terminas explorándolas todas.</span>" data-en="Enter through one door.<br><span class='grad-text'>End up exploring them all.</span>">
+      Entras por una puerta.<br><span class="grad-text">Terminas explorándolas todas.</span>
+    </h2>
+    <p class="mb-12 reveal" style="color:var(--mt);font-size:1rem;line-height:1.7;max-width:580px" data-es="Nueve mundos interconectados. Cada uno es una especialidad completa. Juntos, forman el ecosistema musical más completo del mundo." data-en="Nine interconnected worlds. Each is a complete specialty. Together, they form the most complete music ecosystem in the world.">
+      Nueve mundos interconectados. Cada uno es una especialidad completa.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Guitar -->
+      <div class="comm-card reveal" style="--delay:.05s">
+        <div class="comm-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.11 8A3.5 3.5 0 0 0 4 9.5C4 12 6 14 9 15l1 5h4l1-5c3-1 5-3 5-5.5A3.5 3.5 0 0 0 12.89 8"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="8" y1="5" x2="16" y2="5"/></svg>
+        </div>
+        <h3 class="font-bold text-base mb-1" style="position:relative;z-index:1" data-es="Guitarra" data-en="Guitar">Guitarra</h3>
+        <p class="text-xs" style="color:var(--mt);position:relative;z-index:1" data-es="Zero to rockstar" data-en="Zero to rockstar">Zero to rockstar</p>
+      </div>
+
+      <!-- Bass -->
+      <div class="comm-card reveal" style="--delay:.1s">
+        <div class="comm-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="1.5" stroke-linecap="round"><path d="M9 3h6M12 3v8M8 21s0-4 4-4 4 4 4 4"/><circle cx="12" cy="13" r="2"/></svg>
+        </div>
+        <h3 class="font-bold text-base mb-1" style="position:relative;z-index:1" data-es="Bajo" data-en="Bass">Bajo</h3>
+        <p class="text-xs" style="color:var(--mt);position:relative;z-index:1" data-es="Groove Master" data-en="Groove Master">Groove Master</p>
+      </div>
+
+      <!-- Drums -->
+      <div class="comm-card reveal" style="--delay:.15s">
+        <div class="comm-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="1.5" stroke-linecap="round"><ellipse cx="12" cy="12" rx="10" ry="5"/><path d="M2 12v5c0 2.76 4.48 5 10 5s10-2.24 10-5v-5"/></svg>
+        </div>
+        <h3 class="font-bold text-base mb-1" style="position:relative;z-index:1" data-es="Batería" data-en="Drums">Batería</h3>
+        <p class="text-xs" style="color:var(--mt);position:relative;z-index:1" data-es="Rhythm Masters" data-en="Rhythm Masters">Rhythm Masters</p>
+      </div>
+
+      <!-- Vocals -->
+      <div class="comm-card reveal" style="--delay:.2s">
+        <div class="comm-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="1.5" stroke-linecap="round"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </div>
+        <h3 class="font-bold text-base mb-1" style="position:relative;z-index:1" data-es="Voz" data-en="Vocals">Voz</h3>
+        <p class="text-xs" style="color:var(--mt);position:relative;z-index:1" data-es="Vocal Academy" data-en="Vocal Academy">Vocal Academy</p>
+      </div>
+
+      <!-- Keys -->
+      <div class="comm-card reveal" style="--delay:.25s">
+        <div class="comm-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="8" width="20" height="12" rx="2"/><line x1="6" y1="8" x2="6" y2="20"/><line x1="10" y1="8" x2="10" y2="20"/><line x1="14" y1="8" x2="14" y2="20"/><line x1="18" y1="8" x2="18" y2="20"/><path d="M5 8V5"/><path d="M8 8V3"/><path d="M13 8V5"/><path d="M16 8V3"/></svg>
+        </div>
+        <h3 class="font-bold text-base mb-1" style="position:relative;z-index:1" data-es="Teclados" data-en="Keys">Teclados</h3>
+        <p class="text-xs" style="color:var(--mt);position:relative;z-index:1" data-es="Keys & Synths" data-en="Keys & Synths">Keys &amp; Synths</p>
+      </div>
+
+      <!-- Management -->
+      <div class="comm-card reveal" style="--delay:.3s">
+        <div class="comm-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <h3 class="font-bold text-base mb-1" style="position:relative;z-index:1" data-es="Management" data-en="Management">Management</h3>
+        <p class="text-xs" style="color:var(--mt);position:relative;z-index:1" data-es="Band Management" data-en="Band Management">Band Management</p>
+      </div>
+
+      <!-- Legal -->
+      <div class="comm-card reveal" style="--delay:.35s">
+        <div class="comm-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3 class="font-bold text-base mb-1" style="position:relative;z-index:1" data-es="Legal" data-en="Legal">Legal</h3>
+        <p class="text-xs" style="color:var(--mt);position:relative;z-index:1" data-es="Music Law" data-en="Music Law">Music Law</p>
+      </div>
+
+      <!-- IP Fortress -->
+      <div class="comm-card reveal" style="--delay:.4s;border-color:rgba(224,64,251,.2)">
+        <div class="comm-icon" style="background:rgba(224,64,251,.08);border-color:rgba(224,64,251,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--m)" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3 class="font-bold text-base mb-1" style="position:relative;z-index:1;color:var(--m)" data-es="IP Fortress" data-en="IP Fortress">IP Fortress</h3>
+        <p class="text-xs" style="color:var(--mt);position:relative;z-index:1" data-es="Propiedad Intelectual" data-en="Intellectual Property">Propiedad Intelectual</p>
+      </div>
+
+      <!-- TechBand -->
+      <div class="comm-card reveal" style="--delay:.45s">
+        <div class="comm-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="1.5" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3 class="font-bold text-base mb-1" style="position:relative;z-index:1" data-es="Tecnología" data-en="Technology">Tecnología</h3>
+        <p class="text-xs" style="color:var(--mt);position:relative;z-index:1" data-es="TechBand Lab" data-en="TechBand Lab">TechBand Lab</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ PRICING ═══ -->
+<section id="pricing" class="py-24 px-6" style="background:linear-gradient(180deg,transparent,rgba(224,64,251,.02),transparent)">
+  <div class="max-w-7xl mx-auto">
+    <div class="section-tag reveal" data-es="Planes" data-en="Plans">Planes</div>
+    <h2 class="section-title mb-4 reveal text-center" data-es="Elige tu nivel.<br><span class='grad-text'>Sin excusas.</span>" data-en="Choose your level.<br><span class='grad-text'>No excuses.</span>">
+      Elige tu nivel.<br><span class="grad-text">Sin excusas.</span>
+    </h2>
+    <p class="text-center mb-4 reveal" style="color:var(--mt);font-size:.95rem" data-es="62% más accesible que Guitar Tricks. Cancela cuando quieras." data-en="62% more affordable than Guitar Tricks. Cancel anytime.">62% más accesible que Guitar Tricks. Cancela cuando quieras.</p>
+
+    <!-- Founders badge -->
+    <div class="founders-banner mb-12 reveal">
+      <div class="text-2xl font-black mb-1 grad-text" data-es="Fundadores: $7/mes permanente" data-en="Founders: $7/mo forever">Fundadores: $7/mes permanente</div>
+      <p style="color:var(--mt);font-size:.9rem" data-es="Solo para los primeros 100 miembros — precio bloqueado para siempre" data-en="Only for the first 100 members — price locked forever">Solo para los primeros 100 miembros — precio bloqueado para siempre</p>
+      <div class="mt-4">
+        <a href="#join" class="btn-primary glow-btn" data-es="Ser Fundador" data-en="Become a Founder">Ser Fundador</a>
+      </div>
+    </div>
+
+    <!-- Pricing Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+
+      <!-- BÁSICO -->
+      <div class="pricing-card reveal">
+        <div class="text-xs font-bold tracking-widest uppercase mb-3" style="color:var(--mt)" data-es="Básico" data-en="Basic">Básico</div>
+        <div class="flex items-baseline gap-1 mb-1">
+          <span class="price-amount grad-text">$14</span>
+          <span style="color:var(--mt);font-size:.8rem">/mes</span>
+        </div>
+        <p class="text-xs mb-6" style="color:var(--mt)" data-es="1 instrumento + comunidad" data-en="1 instrument + community">1 instrumento + comunidad</p>
+        <ul class="feature-list space-y-0 mb-6">
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="1 instrumento + comunidad" data-en="1 instrument + community">1 instrumento + comunidad</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Sesiones 1-4 personas" data-en="Sessions 1-4 people">Sesiones 1-4 personas</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Daily Quick Wins" data-en="Daily Quick Wins">Daily Quick Wins</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="GZBR Credits" data-en="GZBR Credits">GZBR Credits</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="BandLoop™ Method" data-en="BandLoop™ Method">BandLoop™ Method</span></li>
+        </ul>
+        <a href="#join" class="btn-outline w-full justify-center" style="font-size:.85rem" data-es="Comenzar" data-en="Start">Comenzar</a>
+      </div>
+
+      <!-- AVANZADO -->
+      <div class="pricing-card reveal popular" style="transition-delay:.05s">
+        <div class="popular-badge" data-es="Popular" data-en="Popular">Popular</div>
+        <div class="text-xs font-bold tracking-widest uppercase mb-3" style="color:var(--c)" data-es="Avanzado" data-en="Advanced">Avanzado</div>
+        <div class="flex items-baseline gap-1 mb-1">
+          <span class="price-amount grad-text">$25</span>
+          <span style="color:var(--mt);font-size:.8rem">/mes</span>
+        </div>
+        <p class="text-xs mb-6" style="color:var(--mt)" data-es="Todo Básico + producción" data-en="All Basic + production">Todo Básico + producción</p>
+        <ul class="feature-list space-y-0 mb-6">
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Todo Básico" data-en="All Basic">Todo Básico</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Songwriting + producción" data-en="Songwriting + production">Songwriting + producción</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Sesiones ilimitadas" data-en="Unlimited sessions">Sesiones ilimitadas</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Mentoría grupal" data-en="Group mentoring">Mentoría grupal</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Primer demo grabado" data-en="First recorded demo">Primer demo grabado</span></li>
+        </ul>
+        <a href="#join" class="btn-primary w-full justify-center" style="font-size:.85rem" data-es="Elegir" data-en="Choose">Elegir</a>
+      </div>
+
+      <!-- PREMIUM -->
+      <div class="pricing-card reveal" style="transition-delay:.1s">
+        <div class="text-xs font-bold tracking-widest uppercase mb-3" style="color:var(--m)" data-es="Premium" data-en="Premium">Premium</div>
+        <div class="flex items-baseline gap-1 mb-1">
+          <span class="price-amount" style="background:linear-gradient(135deg,var(--m),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">$99</span>
+          <span style="color:var(--mt);font-size:.8rem">/mes</span>
+        </div>
+        <p class="text-xs mb-6" style="color:var(--mt)" data-es="Las 9 comunidades" data-en="All 9 communities">Las 9 comunidades</p>
+        <ul class="feature-list space-y-0 mb-6">
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Las 9 comunidades" data-en="All 9 communities">Las 9 comunidades</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Red industria real" data-en="Real industry network">Red industria real</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="IP + protección legal" data-en="IP + legal protection">IP + protección legal</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Showcases talent scout" data-en="Talent scout showcases">Showcases talent scout</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Management + booking" data-en="Management + booking">Management + booking</span></li>
+        </ul>
+        <a href="#join" class="btn-outline w-full justify-center" style="font-size:.85rem;border-color:rgba(224,64,251,.3);color:var(--m)" data-es="Ir Pro" data-en="Go Pro">Ir Pro</a>
+      </div>
+
+      <!-- PRO -->
+      <div class="pricing-card reveal" style="transition-delay:.15s">
+        <div class="text-xs font-bold tracking-widest uppercase mb-3" style="color:var(--mt)" data-es="Pro" data-en="Pro">Pro</div>
+        <div class="flex items-baseline gap-1 mb-1">
+          <span class="price-amount grad-text">$149</span>
+          <span style="color:var(--mt);font-size:.8rem">/mes</span>
+        </div>
+        <p class="text-xs mb-6" style="color:var(--mt)" data-es="Artista profesional" data-en="Professional artist">Artista profesional</p>
+        <ul class="feature-list space-y-0 mb-6">
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Todo Premium" data-en="All Premium">Todo Premium</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Mentoría 1:1 semanal" data-en="Weekly 1:1 mentoring">Mentoría 1:1 semanal</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Grabación en estudio" data-en="Studio recording">Grabación en estudio</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Distribución digital" data-en="Digital distribution">Distribución digital</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Priority support" data-en="Priority support">Priority support</span></li>
+        </ul>
+        <a href="#join" class="btn-outline w-full justify-center" style="font-size:.85rem" data-es="Elegir Pro" data-en="Choose Pro">Elegir Pro</a>
+      </div>
+
+      <!-- INDUSTRIA -->
+      <div class="pricing-card reveal" style="transition-delay:.2s;background:linear-gradient(135deg,rgba(0,229,255,.04),rgba(224,64,251,.04))">
+        <div class="text-xs font-bold tracking-widest uppercase mb-3 grad-text" data-es="Industria" data-en="Industry">Industria</div>
+        <div class="flex items-baseline gap-1 mb-1">
+          <span class="price-amount grad-text">$249</span>
+          <span style="color:var(--mt);font-size:.8rem">/mes</span>
+        </div>
+        <p class="text-xs mb-6" style="color:var(--mt)" data-es="Sellos & profesionales" data-en="Labels & professionals">Sellos &amp; profesionales</p>
+        <ul class="feature-list space-y-0 mb-6">
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Todo Pro" data-en="All Pro">Todo Pro</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Licencia sello discográfico" data-en="Record label license">Licencia sello discográfico</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Acceso total artistas" data-en="Full artist access">Acceso total artistas</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="White-label disponible" data-en="White-label available">White-label disponible</span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-es="Cuenta manager dedicada" data-en="Dedicated account manager">Cuenta manager dedicada</span></li>
+        </ul>
+        <a href="#join" class="btn-primary w-full justify-center glow-btn" style="font-size:.85rem" data-es="Contactar" data-en="Contact">Contactar</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ JOIN CTA ═══ -->
+<section id="join" class="py-24 px-6">
+  <div class="max-w-2xl mx-auto text-center">
+    <div class="section-tag justify-center reveal" data-es="Únete" data-en="Join">Únete</div>
+    <h2 class="section-title mb-4 reveal" data-es="Porque nadie deja una banda.<br><span class='grad-text'>La gente deja de tocar sola.</span>" data-en="Because nobody quits a band.<br><span class='grad-text'>People quit playing alone.</span>">
+      Porque nadie deja una banda.<br><span class="grad-text">La gente deja de tocar sola.</span>
+    </h2>
+    <p class="mb-10 reveal" style="color:var(--mt);font-size:1rem;line-height:1.7" data-es="Dinos quién eres y te contactamos en 24h para asignarte tu banda." data-en="Tell us who you are and we'll reach out in 24h to assign your band.">
+      Dinos quién eres y te contactamos en 24h para asignarte tu banda.
+    </p>
+
+    <form class="glass rounded-2xl p-8 reveal-scale" onsubmit="handleSubmit(event)">
+      <!-- Role Selector -->
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <label class="role-option">
+          <input type="radio" name="role" value="beginner" class="sr-only">
+          <div class="glass rounded-xl p-3 text-sm text-center cursor-pointer transition-all duration-200 border border-transparent hover:border-cyan-DEFAULT" style="color:var(--mt)" data-es="Principiante" data-en="Beginner">Principiante</div>
+        </label>
+        <label class="role-option">
+          <input type="radio" name="role" value="intermediate" class="sr-only">
+          <div class="glass rounded-xl p-3 text-sm text-center cursor-pointer transition-all duration-200 border border-transparent hover:border-cyan-DEFAULT" style="color:var(--mt)" data-es="Intermedio" data-en="Intermediate">Intermedio</div>
+        </label>
+        <label class="role-option">
+          <input type="radio" name="role" value="songwriter" class="sr-only">
+          <div class="glass rounded-xl p-3 text-sm text-center cursor-pointer transition-all duration-200 border border-transparent hover:border-cyan-DEFAULT" style="color:var(--mt)" data-es="Compositor/Productor" data-en="Songwriter/Producer">Compositor/Productor</div>
+        </label>
+        <label class="role-option">
+          <input type="radio" name="role" value="manager" class="sr-only">
+          <div class="glass rounded-xl p-3 text-sm text-center cursor-pointer transition-all duration-200 border border-transparent hover:border-cyan-DEFAULT" style="color:var(--mt)" data-es="Manager/Promotor" data-en="Manager/Promoter">Manager/Promotor</div>
+        </label>
+      </div>
+
+      <div class="space-y-4 mb-6">
+        <input type="text" placeholder="Tu nombre" data-ph-es="Tu nombre" data-ph-en="Your name"
+          class="w-full px-4 py-3 rounded-xl text-sm font-outfit"
+          style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--tx);outline:none;transition:border-color .2s"
+          onfocus="this.style.borderColor='var(--c)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"
+          required aria-label="Nombre">
+        <input type="email" placeholder="Tu email" data-ph-es="Tu email" data-ph-en="Your email"
+          class="w-full px-4 py-3 rounded-xl text-sm font-outfit"
+          style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--tx);outline:none;transition:border-color .2s"
+          onfocus="this.style.borderColor='var(--c)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"
+          required aria-label="Email">
+      </div>
+
+      <button type="submit" class="btn-primary w-full justify-center glow-btn" style="font-size:1rem;padding:16px" data-es="Enviar — Quiero mi banda" data-en="Send — I want my band">
+        Enviar — Quiero mi banda
+      </button>
+
+      <p class="mt-4 text-xs" style="color:var(--mt)" data-es="Sin spam. Sin compromiso. Solo tu banda." data-en="No spam. No commitment. Just your band.">Sin spam. Sin compromiso. Solo tu banda.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ FOOTER ═══ -->
+<footer class="py-12 px-6 border-t" style="border-color:rgba(255,255,255,.06)">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="flex items-center gap-3">
+      <div style="width:28px;height:28px;background:var(--grad);border-radius:7px;display:flex;align-items:center;justify-content:center">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      </div>
+      <div>
+        <div class="font-bold text-sm grad-text">GuitarZero to BandRock LLC</div>
+        <div class="text-xs" style="color:var(--mt)">V8.3 · © 2026 · Tijuana → Global</div>
+      </div>
+    </div>
+
+    <div class="text-xs text-center" style="color:var(--mt)">
+      <span data-es="Hecho con amor en Tijuana, BC, México" data-en="Made with love in Tijuana, BC, México">Hecho con amor en Tijuana, BC, México</span>
+    </div>
+
+    <div class="flex items-center gap-4 text-xs" style="color:var(--mt)">
+      <a href="mailto:contacto@guitarzero.com" style="color:var(--mt);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--c)'" onmouseout="this.style.color='var(--mt)'">contacto@guitarzero.com</a>
+      <span>·</span>
+      <span data-es="Lanzamiento: Última semana Mayo 2026" data-en="Launch: Last week May 2026">Lanzamiento: Última semana Mayo 2026</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+.role-option input:checked + div {
+  border-color: var(--c) !important;
+  background: rgba(0,229,255,.08);
+  color: var(--c);
+}
+</style>
+
+<!-- ═══════════════════════════════ SCRIPTS ═══ -->
+<script>
+// ── Custom Cursor ──────────────────────────────
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+
+function animateRing() {
+  rx += (mx - rx) * .12;
+  ry += (my - ry) * .12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+// ── Particles ──────────────────────────────────
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = canvas.parentElement.offsetWidth;
+  canvas.height = canvas.parentElement.offsetHeight;
+}
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 1.5 + .3;
+    this.speedX = (Math.random() - .5) * .3;
+    this.speedY = (Math.random() - .5) * .3;
+    this.opacity = Math.random() * .4 + .1;
+    this.color = Math.random() > .5 ? '#00e5ff' : '#e040fb';
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.opacity;
+    ctx.fillStyle = this.color;
+    ctx.shadowColor = this.color;
+    ctx.shadowBlur = 6;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function initParticles() {
+  resizeCanvas();
+  particles = Array.from({length: 80}, () => new Particle());
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animateParticles);
+}
+
+window.addEventListener('resize', () => { resizeCanvas(); });
+initParticles();
+animateParticles();
+
+// ── Language ───────────────────────────────────
+function setLang(lang) {
+  document.documentElement.setAttribute('data-lang', lang);
+  document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+  document.querySelectorAll('[data-es]').forEach(el => {
+    const txt = el.getAttribute('data-' + lang);
+    if (txt) el.innerHTML = txt;
+  });
+  document.querySelectorAll('[data-ph-es]').forEach(el => {
+    el.placeholder = el.getAttribute('data-ph-' + lang) || el.placeholder;
+  });
+}
+
+// ── Navbar scroll ──────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ── Mobile menu ────────────────────────────────
+function toggleMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+
+// ── Form ───────────────────────────────────────
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type=submit]');
+  const lang = document.documentElement.getAttribute('data-lang');
+  btn.textContent = lang === 'es' ? '¡Gracias! Te contactamos pronto.' : 'Thanks! We\'ll reach out soon.';
+  btn.style.background = 'linear-gradient(135deg, #00e5ff, #00b8cc)';
+  btn.disabled = true;
+}
+
+// ── GSAP ───────────────────────────────────────
+gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+// Hero entrance
+const mm = gsap.matchMedia();
+mm.add("(prefers-reduced-motion: no-preference)", () => {
+
+  // Hero
+  gsap.timeline()
+    .to('#hero-tag', { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, .2)
+    .from('#hero-headline', { opacity: 0, y: 60, duration: 1.2, ease: 'power4.out' }, .4)
+    .to('#hero-sub', { opacity: 1, y: 0, duration: .9, ease: 'power3.out' }, .9)
+    .to('#hero-ctas', { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, 1.1)
+    .to('#hero-proof', { opacity: 1, y: 0, duration: .7, ease: 'power3.out' }, 1.3);
+
+  // Orb parallax
+  gsap.to('.orb-c', {
+    yPercent: -30, xPercent: -10,
+    scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 }
+  });
+  gsap.to('.orb-m', {
+    yPercent: -20, xPercent: 10,
+    scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 }
+  });
+
+  // Stats bar counter
+  gsap.from('#stats-bar .stat-item', {
+    opacity: 0, y: 30, stagger: .1, duration: .8, ease: 'power3.out',
+    scrollTrigger: { trigger: '#stats-bar', start: 'top 85%' }
+  });
+
+  // Scroll reveals
+  document.querySelectorAll('.reveal').forEach(el => {
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: .8, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%' }
+    });
+  });
+  document.querySelectorAll('.reveal-left').forEach(el => {
+    gsap.to(el, {
+      opacity: 1, x: 0, duration: .9, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%' }
+    });
+  });
+  document.querySelectorAll('.reveal-right').forEach(el => {
+    gsap.to(el, {
+      opacity: 1, x: 0, duration: .9, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%' }
+    });
+  });
+  document.querySelectorAll('.reveal-scale').forEach(el => {
+    gsap.to(el, {
+      opacity: 1, scale: 1, duration: .9, ease: 'back.out(1.4)',
+      scrollTrigger: { trigger: el, start: 'top 88%' }
+    });
+  });
+
+  // Community cards stagger
+  gsap.fromTo('.comm-card',
+    { opacity: 0, y: 50, scale: .95 },
+    { opacity: 1, y: 0, scale: 1, stagger: .07, duration: .7, ease: 'power3.out',
+      scrollTrigger: { trigger: '#communities', start: 'top 78%' }
+    }
+  );
+
+  // Pricing cards stagger
+  gsap.fromTo('.pricing-card',
+    { opacity: 0, y: 60 },
+    { opacity: 1, y: 0, stagger: .08, duration: .8, ease: 'power3.out',
+      scrollTrigger: { trigger: '#pricing', start: 'top 80%' }
+    }
+  );
+
+  // (section-title handled by .reveal ScrollTrigger above)
+
+  // Timeline items
+  gsap.utils.toArray('.timeline-item').forEach((el, i) => {
+    gsap.fromTo(el,
+      { opacity: 0, x: -50 },
+      { opacity: 1, x: 0, duration: .8, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%' },
+        delay: i * .08
+      }
+    );
+  });
+
+});
+</script>
+
+</body>
+</html>
