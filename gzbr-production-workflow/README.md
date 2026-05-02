@@ -43,4 +43,4 @@ _ARCHIVE/             Material descartado o versiones viejas
 
 ## Lanzamiento
 
-Meta GZBR V8.3: **31 mayo 2026**
+Meta GZBR V8.3: **1 julio 2026**

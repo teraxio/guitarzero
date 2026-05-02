@@ -2,7 +2,7 @@
 ## GZBR Launch Team V9.0 · Mayo 2026
 ## Producido por: Social Media Manager Agent
 
-**Objetivo**: Generar lista de espera de 200+ leads calificados antes del 31 de mayo.  
+**Objetivo**: Generar lista de espera de 200+ leads calificados antes del 1 de julio.  
 **CTA universal**: wa.me/526633243845  
 **Pool B**: 85% valor / 15% venta
 
@@ -65,7 +65,7 @@
 
 ---
 
-## SEMANA 4 — 26 al 31 de Mayo (LANZAMIENTO)
+## SEMANA 4 — 26 al 1 de julio (LANZAMIENTO)
 **Tema**: "¡Estamos live! Primeros miembros fundadores"
 
 | Día | Plataforma | Tipo | Tema | CTA |

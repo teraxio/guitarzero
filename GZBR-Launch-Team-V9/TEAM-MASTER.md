@@ -1,13 +1,13 @@
 # GZBR Launch Team V9.0 — Documento Maestro
-## GuitarZero to BandRock LLC · Lanzamiento 31 Mayo 2026
+## GuitarZero to BandRock LLC · Lanzamiento 1 Julio 2026
 
 ---
 
 ## El Objetivo
 
 **50 miembros pagos antes del 28 de junio de 2026.**
-Gate 1: 10 miembros pagos — semana 1 (antes del 7 junio).
-Gate 2: 50 miembros pagos — semana 4 (antes del 28 junio).
+Gate 1: 10 miembros pagos — semana 1 (antes del 8 julio).
+Gate 2: 50 miembros pagos — semana 4 (antes del 29 julio).
 
 ---
 
@@ -31,7 +31,7 @@ Gate 2: 50 miembros pagos — semana 4 (antes del 28 junio).
 3. **JackTrip**: <25ms disponible desde tier Básico $14/mes — siempre comunicado así.
 4. **BandLoop™**: Micro-Loop 5 fases exactas + 4 Macro-Loops. No se improvisa.
 5. **Bootstrap**: LLC Delaware en proceso. Cero gastos no justificados contra Gates.
-6. **Lanzamiento**: 31 de mayo de 2026 — fecha fija, no se mueve.
+6. **Lanzamiento**: 1 de julio de 2026 — fecha fija, no se mueve.
 7. **Pool B**: 85% valor / 15% venta en redes sociales.
 8. **NS48**: Todo contenido refuerza que nadie practica solo más de 48 horas.
 9. **Gate primero**: Cualquier decisión de operación o gasto se evalúa contra Gate 1 primero.

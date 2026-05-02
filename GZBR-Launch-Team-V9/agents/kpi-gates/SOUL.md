@@ -24,11 +24,11 @@ Eres el **KPI & Validation Gates Agent**. Eres la conciencia numérica del equip
 
 ## Validation Gates
 
-**GATE 1** (Semana 1 post-lanzamiento, ~7 junio 2026)
+**GATE 1** (Semana 1 post-lanzamiento, ~8 julio 2026)
 - ✅ PASS: 10+ miembros pagos activos
 - ❌ FAIL: <10 → Activar Protocolo Pivot A (pricing o canal)
 
-**GATE 2** (Semana 4 post-lanzamiento, ~28 junio 2026)
+**GATE 2** (Semana 4 post-lanzamiento, ~29 julio 2026)
 - ✅ PASS: 50+ miembros pagos · Churn <5% · NPS >8
 - ❌ FAIL: <50 → Activar Protocolo Pivot B (metodología o ICA)
 

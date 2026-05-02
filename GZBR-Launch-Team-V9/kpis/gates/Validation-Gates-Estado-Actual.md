@@ -11,8 +11,8 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 FASE: Pre-lanzamiento · 55 días para lanzar
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 GATE 1 (7 Jun): ⏳ 0/10 miembros pagos
-🎯 GATE 2 (28 Jun): ⏳ 0/50 miembros pagos
+🎯 GATE 1 (8 Jul): ⏳ 0/10 miembros pagos
+🎯 GATE 2 (29 Jul): ⏳ 0/50 miembros pagos
 💰 MRR actual: $0 (pre-revenue)
 📱 Lista de espera WA: pendiente conteo
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -57,9 +57,9 @@ FASE: Pre-lanzamiento · 55 días para lanzar
 | 1 May | Skool + Stripe live | ⏳ |
 | 5 May | Inicio contenido pre-lanzamiento | ⏳ |
 | 25 May | Lista espera >100 leads | ⏳ |
-| **31 May** | **🚀 LANZAMIENTO** | ⏳ |
-| 7 Jun | Gate 1: 10 miembros pagos | ⏳ |
-| 28 Jun | Gate 2: 50 miembros pagos | ⏳ |
+| **1 Jul** | **🚀 LANZAMIENTO** | ⏳ |
+| 8 Jul | Gate 1: 10 miembros pagos | ⏳ |
+| 29 Jul | Gate 2: 50 miembros pagos | ⏳ |
 
 ---
 
